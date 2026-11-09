@@ -6,7 +6,6 @@ use App\Models\ConsumptionRecord;
 use App\Models\User;
 use App\Services\ReportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
@@ -19,13 +18,6 @@ class BloodConsumptionPageTest extends TestCase
         parent::setUp();
 
         URL::forceRootUrl('http://localhost');
-        if (DB::connection()->getDriverName() === 'sqlite') {
-            DB::connection()->getPdo()->sqliteCreateFunction(
-                'REGEXP_REPLACE',
-                static fn (string $subject, string $pattern, string $replacement): string => preg_replace('/'.$pattern.'/u', $replacement, $subject) ?? $subject,
-                3
-            );
-        }
     }
 
     public function test_consumption_page_lists_patients_without_requiring_municipality(): void

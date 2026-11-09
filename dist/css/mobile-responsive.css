@@ -1,0 +1,212 @@
+/* Shared mobile layout — mirrors desktop structure with proportional stacking */
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+.dashboard {
+  overflow-x: clip;
+}
+
+.dashboard__content {
+  width: 100%;
+  min-width: 0;
+}
+
+.dashboard__main {
+  overflow-x: clip;
+}
+
+.module-page__content {
+  min-width: 0;
+}
+
+.table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-wrap table {
+  min-width: 520px;
+}
+
+.empty-state,
+.module-page__placeholder {
+  font-style: normal;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #94a3b8;
+  padding: 1.5rem 1rem !important;
+}
+
+.empty-state::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 0.75rem;
+  border-radius: 10px;
+  background: #f1f5f9;
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(15, 23, 42, 0.45);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.sidebar-backdrop[hidden] {
+  display: none !important;
+}
+
+body.dashboard--drawer-open {
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .dashboard__main {
+    padding: 1rem 0.85rem 1.25rem;
+  }
+
+  .module-page__content {
+    padding: 1rem;
+    border-radius: 10px;
+  }
+
+  .module-page__header h2 {
+    font-size: 1.15rem;
+  }
+
+  .collection-header-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .collection-header-bar .mode-tabs,
+  .collection-header-bar .btn-register-donor {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .search-bar-wrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input-wrap {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .results-count-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filters-bar .search-input-wrap,
+  .filters-bar .filter-select,
+  .filters-bar .reset-btn {
+    width: 100%;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .location-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-card,
+  .register-modal-card,
+  .donor-detail-card {
+    max-width: 100%;
+    padding: 1.15rem;
+    max-height: calc(100dvh - 24px);
+  }
+
+  .modal-backdrop,
+  .modal-overlay {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .mini-donation-form .form-row-inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header__username {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #delete-confirm-modal .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  #delete-confirm-modal .btn-cancel,
+  #delete-confirm-modal .btn-submit {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .summary-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .mode-tab {
+    flex: 1 1 auto;
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  .btn-register-donor,
+  .btn-add,
+  .btn-primary,
+  .search-input,
+  .filter-select {
+    min-height: 44px;
+  }
+
+  .returning-donor-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-add-donation-sm {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .panel-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .panel-header .btn-add {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .header__username {
+    display: none;
+  }
+}

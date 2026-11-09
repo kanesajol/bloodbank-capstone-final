@@ -1,0 +1,38 @@
+:root {
+  --color-red-primary: #990000;
+  --color-red-dark: #7a0000;
+  --color-sand: #FFF8F6;
+  --color-green-primary: #1b5e20;
+  --color-green-dark: #144a18;
+  --color-yellow-brand: #ffeb3b;
+  --color-white: #ffffff;
+  --color-text: #1a1a1a;
+  --color-text-muted: #666666;
+  --font-family: 'Poppins', 'Montserrat', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background: var(--color-sand);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+  font-family: inherit;
+}

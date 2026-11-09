@@ -1,0 +1,118 @@
+[hidden] {
+  display: none !important;
+}
+
+.form-error {
+  color: #990000;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.flash-banner {
+  margin: 0 0 1rem;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.flash-banner--success {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.flash-banner--error {
+  background: #fdecea;
+  color: #990000;
+}
+
+#delete-confirm-modal.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+#delete-confirm-modal .modal-card {
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+#delete-confirm-modal .modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid #eee;
+}
+
+#delete-confirm-modal .modal-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+#delete-confirm-modal .modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #888;
+  padding: 4px;
+}
+
+#delete-confirm-modal .delete-confirm-message {
+  margin: 0 0 0.5rem;
+  color: #1a1a2e;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+#delete-confirm-modal .delete-confirm-name {
+  margin: 0 0 1rem;
+  color: #990000;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+#delete-confirm-modal .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 0.5rem;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+#delete-confirm-modal .btn-cancel,
+#delete-confirm-modal .btn-submit {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#delete-confirm-modal .btn-cancel {
+  border: 1px solid #cbd5e0;
+  background: #fff;
+  color: #4a5568;
+}
+
+#delete-confirm-modal .btn-submit {
+  border: none;
+  background: #990000;
+  color: #fff;
+}

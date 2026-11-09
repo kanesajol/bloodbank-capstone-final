@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Caraga Regional Hospital Surigao City">
+  <circle cx="100" cy="100" r="98" fill="#FFEB3B" stroke="#1a1a1a" stroke-width="2"/>
+  <circle cx="100" cy="100" r="78" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+  <defs>
+    <path id="topArc" d="M 30 100 A 70 70 0 0 1 170 100"/>
+    <path id="bottomArc" d="M 170 100 A 70 70 0 0 1 30 100"/>
+  </defs>
+  <text fill="#1a1a1a" font-family="Arial, sans-serif" font-size="11" font-weight="700" letter-spacing="2">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">CARAGA REGIONAL HOSPITAL</textPath>
+  </text>
+  <text fill="#1a1a1a" font-family="Arial, sans-serif" font-size="11" font-weight="700" letter-spacing="3">
+    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">SURIGAO CITY</textPath>
+  </text>
+  <g fill="#1B5E20">
+    <rect x="92" y="55" width="16" height="90" rx="2"/>
+    <rect x="55" y="92" width="90" height="16" rx="2"/>
+    <path d="M55 100 A45 45 0 0 1 55 55 L70 55 A30 30 0 0 0 70 100 Z"/>
+    <path d="M145 100 A45 45 0 0 0 145 55 L130 55 A30 30 0 0 1 130 100 Z"/>
+  </g>
+</svg>

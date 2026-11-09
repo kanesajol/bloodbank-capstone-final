@@ -1,0 +1,11 @@
+**/node_modules
+**/vendor
+**/.expo
+.git
+.env
+.env.*
+!.env.example
+mobile/
+*.log
+dist/
+coverage/

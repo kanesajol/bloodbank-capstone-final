@@ -2,10 +2,14 @@
   "$schema": "https://schema.railpack.com",
   "steps": {
     "install:node": {
-      "commands": ["true"]
+      "commands": [
+        "mkdir -p /app/node_modules/.cache"
+      ]
     },
     "prune:node": {
-      "commands": ["true"]
+      "commands": [
+        "true"
+      ]
     },
     "build": {
       "commands": [

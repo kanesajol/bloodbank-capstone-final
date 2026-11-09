@@ -69,6 +69,47 @@ DB_PASSWORD=
 
 Create the `bloodbank` database in phpMyAdmin, then run `php artisan migrate --seed` again.
 
+### Deploy on Railway
+
+Keep Railway's MySQL database as a separate Railway service. In the web service's
+Variables, add the following values. The `MySQL` service name in each reference must
+match the actual database service name:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://bloodbank-capstone-final-production.up.railway.app
+APP_KEY=<generate privately with php artisan key:generate --show>
+
+DB_CONNECTION=mysql
+DB_HOST=${{MySQL.MYSQLHOST}}
+DB_PORT=${{MySQL.MYSQLPORT}}
+DB_DATABASE=${{MySQL.MYSQLDATABASE}}
+DB_USERNAME=${{MySQL.MYSQLUSER}}
+DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
+
+LOG_CHANNEL=stderr
+LOG_LEVEL=info
+```
+
+Generate `APP_KEY` in a trusted local terminal and paste its output directly into
+Railway's private Variables UI. Do not commit it or share it in logs or chat. Railway's
+`${{MySQL.*}}` references resolve the credentials and internal network address from
+the database service; do not use WAMP's `127.0.0.1` values or the database service's
+public address.
+
+The Railpack build does not cache Laravel configuration. Railway injects Variables
+when the container starts, so Laravel reads the production database settings at
+runtime. The build checks that `pdo_mysql` is available. Laravel logs to standard
+error in production, which Railway collects in Deploy Logs; `APP_DEBUG=false` keeps
+exception details out of public error pages.
+
+The app does not automatically migrate or seed the production database. After
+creating/connecting the MySQL service, confirm that it is the intended database and
+that any existing data is backed up. Then run `php artisan migrate --force` from the
+Railway web service's shell only after reviewing the pending migrations. Do not run
+`db:seed` for production: the demo seeder creates sample staff accounts.
+
 ## Run the web app
 
 ```powershell

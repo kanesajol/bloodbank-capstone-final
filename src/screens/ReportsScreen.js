@@ -70,7 +70,7 @@ function sumColumn(rows, index) {
 }
 
 function ageRows(age, peopleTotal) {
-  const order = ['18–25', '26–35', '36–45', '46–55', '56+'];
+  const order = ['16–25', '26–35', '36–45', '46–55', '56+'];
   const byGroup = Object.fromEntries((age?.groups ?? []).map((group) => [group.group, group]));
   const total = peopleTotal ?? age?.totalPatients ?? age?.totalDonors ?? 0;
 
@@ -834,8 +834,8 @@ const styles = StyleSheet.create({
   loading: { marginVertical: 18 },
   error: { color: colors.danger, marginBottom: 10, fontSize: 13 },
   reportSections: { gap: 12 },
-  demoPair: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },
-  demoPairCol: { flex: 1, minWidth: 0 },
+  demoPair: { flexDirection: 'column', gap: 10, alignItems: 'stretch' },
+  demoPairCol: { width: '100%' },
   summaryCard: { padding: 13, borderWidth: 1, borderColor: '#f1dede', borderRadius: 16, backgroundColor: '#fff', shadowColor: '#7f1d1d', shadowOpacity: 0.04, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 1 },
   sectionHeading: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingBottom: 11, borderBottomWidth: 1, borderBottomColor: '#f1f5f9' },
   sectionIcon: { width: 36, height: 36, borderRadius: 12, backgroundColor: '#fff1f1', alignItems: 'center', justifyContent: 'center' },

@@ -21,6 +21,49 @@ class UniqueDonorReportingTest extends TestCase
         URL::forceRootUrl('http://localhost');
     }
 
+    public function test_age_sixteen_and_seventeen_donors_are_included_in_age_reports(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        foreach ([16, 17] as $age) {
+            $donor = Donor::query()->create([
+                'full_name' => 'Donor Age '.$age,
+                'blood_type' => 'O+',
+                'age' => $age,
+                'gender' => 'Female',
+                'contact' => '091800000'.$age,
+                'barangay' => 'Washington',
+                'municipality' => 'Surigao City',
+                'province' => 'Surigao del Norte',
+                'registered_date' => '2026-06-10',
+            ]);
+
+            $donor->donations()->create([
+                'donated_on' => '2026-06-28',
+                'blood_type' => 'O+',
+                'location' => 'Surigao City',
+                'bags' => 1,
+            ]);
+        }
+
+        $summary = app(ReportService::class)->demographics('2026', '6', 'Surigao del Norte');
+
+        $this->assertSame('16–25', $summary['age']['groups'][0]['group']);
+        $this->assertSame(2, $summary['age']['groups'][0]['count']);
+
+        $this->getJson('/dashboard/reports/demographic-details?'.http_build_query([
+            'type' => 'age',
+            'group' => '16–25',
+            'month' => '6',
+            'year' => '2026',
+            'location' => 'Surigao del Norte',
+        ]))
+            ->assertOk()
+            ->assertJsonCount(2, 'donors')
+            ->assertJsonFragment(['age' => 16])
+            ->assertJsonFragment(['age' => 17]);
+    }
+
     public function test_later_donation_stays_on_one_profile_and_reports_use_permanent_address(): void
     {
         $this->actingAs(User::factory()->create());
@@ -270,14 +313,14 @@ class UniqueDonorReportingTest extends TestCase
         $summary = app(ReportService::class)->consumptionDemographics('6', '2026', 'Surigao del Norte');
 
         $this->assertSame(2, $summary['age']['totalPatients']);
-        $this->assertSame(['group' => '18–25', 'count' => 1, 'bags' => 5], $summary['age']['groups'][0]);
+        $this->assertSame(['group' => '16–25', 'count' => 1, 'bags' => 5], $summary['age']['groups'][0]);
         $this->assertSame(['group' => '26–35', 'count' => 1, 'bags' => 3], $summary['age']['groups'][1]);
         $this->assertSame(['gender' => 'Female', 'count' => 1, 'bags' => 5], $summary['gender']['rows'][0]);
         $this->assertSame(['gender' => 'Male', 'count' => 1, 'bags' => 3], $summary['gender']['rows'][1]);
 
         $this->getJson('/dashboard/reports/consumption-demographic-details?'.http_build_query([
             'type' => 'age',
-            'group' => '18–25',
+            'group' => '16–25',
             'month' => '6',
             'year' => '2026',
             'location' => 'Surigao del Norte',
@@ -301,7 +344,7 @@ class UniqueDonorReportingTest extends TestCase
 
         $this->getJson('/dashboard/reports/consumption-demographic-details?'.http_build_query([
             'type' => 'gender',
-            'group' => '18–25',
+            'group' => '16–25',
         ]))->assertUnprocessable()->assertJsonValidationErrors('group');
 
         $this->get('/dashboard/reports?view=periodic')

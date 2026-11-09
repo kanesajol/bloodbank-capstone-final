@@ -891,7 +891,7 @@ class ReportService
     private function ageBracketDefinitions(): array
     {
         return [
-            ['group' => '18–25', 'min' => 18, 'max' => 25],
+            ['group' => '16–25', 'min' => 16, 'max' => 25],
             ['group' => '26–35', 'min' => 26, 'max' => 35],
             ['group' => '36–45', 'min' => 36, 'max' => 45],
             ['group' => '46–55', 'min' => 46, 'max' => 55],

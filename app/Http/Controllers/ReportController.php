@@ -154,7 +154,7 @@ class ReportController extends Controller
     public function demographicDetails(Request $request): JsonResponse
     {
         $groups = $request->input('type') === 'age'
-            ? ['18–25', '26–35', '36–45', '46–55', '56+']
+            ? ['16–25', '26–35', '36–45', '46–55', '56+']
             : ['Female', 'Male'];
         $validated = $request->validate([
             'type' => ['required', Rule::in(['age', 'gender'])],
@@ -183,7 +183,7 @@ class ReportController extends Controller
     public function consumptionDemographicDetails(Request $request): JsonResponse
     {
         $groups = $request->input('type') === 'age'
-            ? ['18–25', '26–35', '36–45', '46–55', '56+']
+            ? ['16–25', '26–35', '36–45', '46–55', '56+']
             : ['Female', 'Male'];
         $validated = $request->validate([
             'type' => ['required', Rule::in(['age', 'gender'])],

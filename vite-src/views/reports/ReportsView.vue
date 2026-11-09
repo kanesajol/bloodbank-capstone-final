@@ -400,7 +400,7 @@
           <div>
             <h3 class="section-heading">Donor Age Report</h3>
             <p class="section-subheading">
-              Categorization and statistical analysis of blood donors by structured age brackets (18–25, 26–35, 36–45, 46–55, 56+).
+              Categorization and statistical analysis of blood donors by structured age brackets (16–25, 26–35, 36–45, 46–55, 56+).
             </p>
           </div>
 
@@ -898,7 +898,7 @@ const yearlyReportData = computed(() => {
 
   // 3. By Age Group
   const ageBrackets = [
-    { group: '18–25', min: 18, max: 25 },
+    { group: '16–25', min: 16, max: 25 },
     { group: '26–35', min: 26, max: 35 },
     { group: '36–45', min: 36, max: 45 },
     { group: '46–55', min: 46, max: 55 },
@@ -953,7 +953,7 @@ const ageReportData = computed(() => {
   }
 
   const ageBrackets = [
-    { group: '18–25', min: 18, max: 25 },
+    { group: '16–25', min: 16, max: 25 },
     { group: '26–35', min: 26, max: 35 },
     { group: '36–45', min: 36, max: 45 },
     { group: '46–55', min: 46, max: 55 },

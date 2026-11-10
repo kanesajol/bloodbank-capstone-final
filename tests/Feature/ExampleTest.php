@@ -23,4 +23,11 @@ class ExampleTest extends TestCase
 
         $response->assertOk()->assertSee('Staff Login');
     }
+
+    public function test_the_login_page_is_available_at_the_login_path(): void
+    {
+        $response = $this->get('/login');
+
+        $response->assertOk()->assertSee('Staff Login');
+    }
 }

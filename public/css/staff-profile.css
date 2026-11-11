@@ -346,6 +346,45 @@
 }
 
 @media (max-width: 600px) {
+  .profile-layout {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .profile-layout > *,
+  .profile-details-list,
+  .profile-details-list .detail-item {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .profile-layout > * {
+    width: 100%;
+  }
+
+  .profile-name,
+  .profile-username,
+  .detail-label,
+  .detail-val {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .profile-details-list .detail-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .profile-layout .profile-details-list .detail-val {
+    text-align: left;
+  }
+
+  .profile-right-content,
+  .profile-right-content > .card-box {
+    min-width: 0;
+    width: 100%;
+  }
+
   .profile-right-content .form-grid {
     grid-template-columns: 1fr;
     gap: 0.85rem;

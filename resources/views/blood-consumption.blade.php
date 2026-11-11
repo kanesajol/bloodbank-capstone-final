@@ -498,7 +498,7 @@
             font-weight: 600;
         }
         .summary-grid {
-            grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+            grid-template-columns: repeat(8, minmax(0, 1fr));
         }
         .summary-grid .summary-card span {
             white-space: normal;

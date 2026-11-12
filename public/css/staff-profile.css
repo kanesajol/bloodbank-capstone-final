@@ -236,9 +236,9 @@
   background: #fff1f2;
 }
 
-.profile-right-content .password-toggle svg {
-  width: 19px;
-  height: 19px;
+.profile-right-content .password-toggle i {
+  font-size: 19px;
+  line-height: 1;
 }
 
 .profile-right-content .password-toggle__eye-off,

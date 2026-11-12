@@ -956,6 +956,22 @@
                         history.replaceState(null, '', url);
                         modal.remove();
                     }
+                    function bindBirthdateAge(form) {
+                        if (!form || form.dataset.birthdateAgeBound === '1') return;
+                        const birthdate = form.querySelector('[data-birthdate]');
+                        const age = form.querySelector('[data-age]');
+                        if (!birthdate || !age) return;
+                        form.dataset.birthdateAgeBound = '1';
+                        birthdate.addEventListener('change', () => {
+                            if (!birthdate.value) return;
+                            const born = new Date(birthdate.value + 'T00:00:00');
+                            const today = new Date();
+                            let years = today.getFullYear() - born.getFullYear();
+                            const month = today.getMonth() - born.getMonth();
+                            if (month < 0 || (month === 0 && today.getDate() < born.getDate())) years -= 1;
+                            if (years >= 16 && years <= 70) age.value = String(years);
+                        });
+                    }
                     function bindEditDonorForm(modal) {
                         const form = modal?.querySelector('form');
                         if (!form || form.dataset.outcomeBound === '1') return;
@@ -964,8 +980,6 @@
                         const deferred = form.querySelector('[data-outcome="deferred"]');
                         const reason = form.querySelector('[data-deferral-reason]');
                         const custom = form.querySelector('[data-custom-reason]');
-                        const birthdate = form.querySelector('[data-birthdate]');
-                        const age = form.querySelector('[data-age]');
                         const sync = () => {
                             const status = form.querySelector('input[name="status"]:checked')?.value || 'passed';
                             if (passed) passed.hidden = status !== 'passed';
@@ -976,15 +990,7 @@
                             input.addEventListener('change', sync);
                         });
                         reason?.addEventListener('change', sync);
-                        birthdate?.addEventListener('change', () => {
-                            if (!birthdate.value || !age) return;
-                            const born = new Date(birthdate.value + 'T00:00:00');
-                            const today = new Date();
-                            let years = today.getFullYear() - born.getFullYear();
-                            const month = today.getMonth() - born.getMonth();
-                            if (month < 0 || (month === 0 && today.getDate() < born.getDate())) years -= 1;
-                            if (years >= 16 && years <= 70) age.value = String(years);
-                        });
+                        bindBirthdateAge(form);
                         sync();
                     }
                     function openDonorEditor(url) {
@@ -1009,6 +1015,7 @@
                     });
                     document.addEventListener('DOMContentLoaded', () => {
                         bindDonorModal(document.getElementById('donor-modal'));
+                        bindBirthdateAge(document.getElementById('register-new-panel'));
                         bindEditDonorForm(document.getElementById('edit-donor-modal'));
                     });
                 </script>
@@ -1098,8 +1105,12 @@
                                             <input id="regMbdDate" name="mbd_date" value="{{ old('mbd_date') }}" type="hidden" data-mbd-value>
                                         </div>
                                         <div class="form-field">
+                                            <label for="regBirthdate">Birthdate</label>
+                                            <input id="regBirthdate" name="birthdate" value="{{ old('birthdate') }}" type="date" data-birthdate>
+                                        </div>
+                                        <div class="form-field">
                                             <label for="regAge">Age</label>
-                                            <input id="regAge" name="age" value="{{ old('age') }}" type="number" min="16" max="70" required>
+                                            <input id="regAge" name="age" value="{{ old('age') }}" type="number" min="16" max="70" data-age required>
                                         </div>
                                         <div class="form-field">
                                             <label for="regGender">Sex</label>

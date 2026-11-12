@@ -205,7 +205,7 @@ class BloodCollectionLocationDonorsTest extends TestCase
             ->assertSee('Edit Donor Info', false);
     }
 
-    public function test_collection_form_saves_mbd_type_with_date_and_title_cased_name(): void
+    public function test_collection_form_saves_birthdate_and_mbd_type_with_date(): void
     {
         $this->actingAs(User::factory()->create());
 
@@ -213,7 +213,8 @@ class BloodCollectionLocationDonorsTest extends TestCase
             ->assertOk()
             ->assertSee('name="mbd_type"', false)
             ->assertSee('name="mbd_on"', false)
-            ->assertDontSee('id="regBirthdate"', false)
+            ->assertSee('id="regBirthdate"', false)
+            ->assertSee('name="birthdate"', false)
             ->assertSee('type="date"', false)
             ->assertSeeInOrder(['Province', 'Municipality / City', 'Barangay'], false);
 
@@ -230,6 +231,7 @@ class BloodCollectionLocationDonorsTest extends TestCase
             'barangay' => 'Central (Poblacion)',
             'mbd_type' => 'WI',
             'mbd_on' => '2025-01-01',
+            'birthdate' => '1996-01-01',
             'status' => 'passed',
             'serial_number' => 'SN-100',
             'reserved_for_px' => 'juan dela cruz',
@@ -240,7 +242,7 @@ class BloodCollectionLocationDonorsTest extends TestCase
             'province' => 'Surigao del Norte',
             'municipality' => 'Placer',
             'barangay' => 'Central (Poblacion)',
-            'birthdate' => null,
+            'birthdate' => '1996-01-01 00:00:00',
         ]);
         $this->assertDatabaseHas('donations', [
             'mbd_date' => 'WI 01/01/2025',
@@ -278,5 +280,29 @@ class BloodCollectionLocationDonorsTest extends TestCase
             'status' => 'deferred',
             'reason_for_deferral' => 'Underweight',
         ])->assertSessionHasErrors('municipality');
+    }
+
+    public function test_new_donor_registration_rejects_birthdates_after_today(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        $this->post('/dashboard/blood-collection/donors', [
+            'first_name' => 'Future',
+            'last_name' => 'Birthday',
+            'blood_type' => 'A+',
+            'age' => 28,
+            'gender' => 'Female',
+            'contact' => '09180000011',
+            'province' => 'Dinagat Islands',
+            'municipality' => 'Basilisa',
+            'barangay' => 'Poblacion',
+            'initial_donation_date' => '2025-02-02',
+            'donation_location' => 'MBD',
+            'birthdate' => now()->addDay()->toDateString(),
+        ])->assertSessionHasErrors('birthdate');
+
+        $this->assertDatabaseMissing('donors', [
+            'full_name' => 'Birthday, Future',
+        ]);
     }
 }

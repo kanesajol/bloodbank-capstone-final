@@ -76,6 +76,8 @@ export default function RegisterDonorScreen({ navigation, route }) {
   const [province, setProvince] = useState('Dinagat Islands');
   const [mbdType, setMbdType] = useState('MBD');
   const [mbdOn, setMbdOn] = useState(() => formatDate(new Date()));
+  const [mbdDatePickerVisible, setMbdDatePickerVisible] = useState(false);
+  const [pendingMbdDate, setPendingMbdDate] = useState(new Date());
   const [status, setStatus] = useState('passed');
   const [serialNumber, setSerialNumber] = useState('');
   const [reservedForPatient, setReservedForPatient] = useState('');
@@ -203,9 +205,40 @@ export default function RegisterDonorScreen({ navigation, route }) {
     updateAgeFromBirthdate(formatDate(selectedDate));
   };
 
+  const openMbdDatePicker = () => {
+    setPendingMbdDate(parseDate(mbdOn) ?? new Date());
+    setMbdDatePickerVisible(true);
+  };
+
+  const handleMbdDatePickerChange = (event, selectedDate) => {
+    if (Platform.OS === 'android') {
+      setMbdDatePickerVisible(false);
+      if (event.type !== 'set' || !selectedDate) {
+        return;
+      }
+
+      setMbdOn(formatDate(selectedDate));
+      return;
+    }
+
+    if (selectedDate) {
+      setPendingMbdDate(selectedDate);
+    }
+  };
+
   const saveDonor = async () => {
-    setSaving(true);
     setMessage('');
+    if ((!donorId || status === 'passed' || status === 'deferred') && !parseDate(mbdOn)) {
+      setMessage('Enter a valid MBD / Date in YYYY-MM-DD format.');
+      return;
+    }
+    const parsedBirthdate = birthdate ? parseDate(birthdate) : null;
+    if (birthdate && (!parsedBirthdate || parsedBirthdate > parseDate(formatDate(new Date())))) {
+      setMessage('Enter a valid birthdate in YYYY-MM-DD format that is not in the future.');
+      return;
+    }
+
+    setSaving(true);
     const knownBarangays = meta?.places?.[municipality] ?? [];
     const savedBarangay = knownBarangays.length > 0 ? barangay.trim() : titleCaseText(barangay);
     const savedMbd = composeMbdDate(mbdType, mbdOn);
@@ -250,6 +283,7 @@ export default function RegisterDonorScreen({ navigation, route }) {
         suffix: suffix === 'None' ? '' : suffix,
         blood_type: bloodType,
         age: parseInt(age, 10),
+        birthdate: birthdate || null,
         gender,
         contact: contact.trim(),
         barangay: savedBarangay,
@@ -351,81 +385,120 @@ export default function RegisterDonorScreen({ navigation, route }) {
       <View style={styles.sectionCard}>
         <SectionHeading number="02" title={donorId ? 'Personal information' : 'Event & personal info'} />
         <FormField label="MBD / Date *">
-          <SelectField value={mbdType} options={['MBD', 'WI']} onChange={setMbdType} placeholder="MBD or WI" />
-          <Text style={styles.dateHint}>Event date: {mbdOn}</Text>
+          <View style={styles.mbdControlRow}>
+            <View style={styles.mbdTypeControl}>
+              <SelectField value={mbdType} options={['MBD', 'WI']} onChange={setMbdType} placeholder="MBD or WI" />
+            </View>
+            <DateTextField
+              value={mbdOn}
+              onChangeText={setMbdOn}
+              onPressCalendar={openMbdDatePicker}
+              accessibilityLabel="MBD date"
+              style={styles.mbdDateControl}
+            />
+          </View>
+          {Platform.OS === 'android' && mbdDatePickerVisible ? (
+            <DateTimePicker
+              value={pendingMbdDate}
+              mode="date"
+              display="default"
+              onChange={handleMbdDatePickerChange}
+            />
+          ) : null}
+          <Modal
+            visible={Platform.OS === 'ios' && mbdDatePickerVisible}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setMbdDatePickerVisible(false)}
+          >
+            <Pressable style={styles.modalBackdrop} onPress={() => setMbdDatePickerVisible(false)}>
+              <Pressable style={styles.pickerCard} onPress={(event) => event.stopPropagation()}>
+                <Text style={styles.pickerTitle}>Select MBD date</Text>
+                <DateTimePicker
+                  value={pendingMbdDate}
+                  mode="date"
+                  display="spinner"
+                  onChange={handleMbdDatePickerChange}
+                />
+                <View style={styles.datePickerActions}>
+                  <Pressable
+                    style={styles.datePickerCancel}
+                    onPress={() => setMbdDatePickerVisible(false)}
+                    accessibilityRole="button"
+                  >
+                    <Text style={styles.pickerCancelText}>Cancel</Text>
+                  </Pressable>
+                  <Pressable
+                    style={styles.datePickerConfirm}
+                    onPress={() => {
+                      setMbdOn(formatDate(pendingMbdDate));
+                      setMbdDatePickerVisible(false);
+                    }}
+                    accessibilityRole="button"
+                  >
+                    <Text style={styles.datePickerConfirmText}>Done</Text>
+                  </Pressable>
+                </View>
+              </Pressable>
+            </Pressable>
+          </Modal>
         </FormField>
-        {donorId ? (
-          <FormField label="Birthdate">
-            {Platform.OS === 'web' ? (
-              <TextInput
-                style={styles.input}
-                value={birthdate}
-                onChangeText={updateAgeFromBirthdate}
-                placeholder="Select birthdate"
-                type="date"
-              />
-            ) : (
-              <Pressable
-                style={styles.dropdown}
-                onPress={openBirthdatePicker}
-                accessibilityRole="button"
-                accessibilityLabel={birthdate || 'Select birthdate'}
-              >
-                <Text style={birthdate ? styles.dropdownValue : styles.dropdownPlaceholder}>
-                  {birthdate || 'Select birthdate'}
-                </Text>
-                <Text style={styles.dropdownArrow}>⌄</Text>
+        <FormField label="Birthdate">
+          <DateTextField
+            value={birthdate}
+            onChangeText={updateAgeFromBirthdate}
+            onPressCalendar={openBirthdatePicker}
+            accessibilityLabel="Birthdate"
+            style={styles.birthdateControl}
+          />
+          {Platform.OS === 'android' && birthdatePickerVisible ? (
+            <DateTimePicker
+              value={pendingBirthdate}
+              mode="date"
+              display="default"
+              maximumDate={new Date()}
+              onChange={handleBirthdatePickerChange}
+            />
+          ) : null}
+          <Modal
+            visible={Platform.OS === 'ios' && birthdatePickerVisible}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setBirthdatePickerVisible(false)}
+          >
+            <Pressable style={styles.modalBackdrop} onPress={() => setBirthdatePickerVisible(false)}>
+              <Pressable style={styles.pickerCard} onPress={(event) => event.stopPropagation()}>
+                <Text style={styles.pickerTitle}>Select birthdate</Text>
+                <DateTimePicker
+                  value={pendingBirthdate}
+                  mode="date"
+                  display="spinner"
+                  maximumDate={new Date()}
+                  onChange={handleBirthdatePickerChange}
+                />
+                <View style={styles.datePickerActions}>
+                  <Pressable
+                    style={styles.datePickerCancel}
+                    onPress={() => setBirthdatePickerVisible(false)}
+                    accessibilityRole="button"
+                  >
+                    <Text style={styles.pickerCancelText}>Cancel</Text>
+                  </Pressable>
+                  <Pressable
+                    style={styles.datePickerConfirm}
+                    onPress={() => {
+                      updateAgeFromBirthdate(formatDate(pendingBirthdate));
+                      setBirthdatePickerVisible(false);
+                    }}
+                    accessibilityRole="button"
+                  >
+                    <Text style={styles.datePickerConfirmText}>Done</Text>
+                  </Pressable>
+                </View>
               </Pressable>
-            )}
-            {Platform.OS === 'android' && birthdatePickerVisible ? (
-              <DateTimePicker
-                value={pendingBirthdate}
-                mode="date"
-                display="default"
-                maximumDate={new Date()}
-                onChange={handleBirthdatePickerChange}
-              />
-            ) : null}
-            <Modal
-              visible={Platform.OS === 'ios' && birthdatePickerVisible}
-              transparent
-              animationType="fade"
-              onRequestClose={() => setBirthdatePickerVisible(false)}
-            >
-              <Pressable style={styles.modalBackdrop} onPress={() => setBirthdatePickerVisible(false)}>
-                <Pressable style={styles.pickerCard} onPress={(event) => event.stopPropagation()}>
-                  <Text style={styles.pickerTitle}>Select birthdate</Text>
-                  <DateTimePicker
-                    value={pendingBirthdate}
-                    mode="date"
-                    display="spinner"
-                    maximumDate={new Date()}
-                    onChange={handleBirthdatePickerChange}
-                  />
-                  <View style={styles.datePickerActions}>
-                    <Pressable
-                      style={styles.datePickerCancel}
-                      onPress={() => setBirthdatePickerVisible(false)}
-                      accessibilityRole="button"
-                    >
-                      <Text style={styles.pickerCancelText}>Cancel</Text>
-                    </Pressable>
-                    <Pressable
-                      style={styles.datePickerConfirm}
-                      onPress={() => {
-                        updateAgeFromBirthdate(formatDate(pendingBirthdate));
-                        setBirthdatePickerVisible(false);
-                      }}
-                      accessibilityRole="button"
-                    >
-                      <Text style={styles.datePickerConfirmText}>Done</Text>
-                    </Pressable>
-                  </View>
-                </Pressable>
-              </Pressable>
-            </Modal>
-          </FormField>
-        ) : null}
+            </Pressable>
+          </Modal>
+        </FormField>
         <View style={styles.fieldRow}>
           <FormField label="Age *" style={styles.halfField}>
             <TextInput
@@ -609,6 +682,43 @@ function FormField({ label, style, children }) {
   );
 }
 
+function DateTextField({ value, onChangeText, onPressCalendar, accessibilityLabel, style }) {
+  if (Platform.OS === 'web') {
+    return (
+      <TextInput
+        style={[styles.input, style]}
+        value={value}
+        onChangeText={onChangeText}
+        type="date"
+        accessibilityLabel={accessibilityLabel}
+      />
+    );
+  }
+
+  return (
+    <View style={[styles.dropdown, style]}>
+      <TextInput
+        style={styles.dateTextInput}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder="YYYY-MM-DD"
+        placeholderTextColor="#94a3b8"
+        keyboardType="numbers-and-punctuation"
+        maxLength={10}
+        accessibilityLabel={accessibilityLabel}
+      />
+      <Pressable
+        style={styles.datePickerButton}
+        onPress={onPressCalendar}
+        accessibilityRole="button"
+        accessibilityLabel={`Choose ${accessibilityLabel.toLowerCase()} from calendar`}
+      >
+        <Text style={styles.datePickerIcon} accessibilityElementsHidden>▦</Text>
+      </Pressable>
+    </View>
+  );
+}
+
 function SelectField({ value, options, onChange, placeholder, disabled = false }) {
   const [visible, setVisible] = useState(false);
   const isDisabled = disabled || options.length === 0;
@@ -713,11 +823,26 @@ const styles = StyleSheet.create({
   sectionNumber: { color: '#990000', fontSize: 10, fontWeight: '800' },
   sectionTitle: { color: '#1e293b', fontSize: 15, fontWeight: '800' },
   fieldRow: { flexDirection: 'row', gap: 10 },
+  mbdControlRow: { flexDirection: 'row', gap: 10 },
+  mbdTypeControl: { width: 110 },
+  mbdDateControl: { flex: 1, minWidth: 0 },
+  birthdateControl: { flex: 1, minWidth: 0 },
+  dateTextInput: {
+    flex: 1,
+    minWidth: 0,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    borderWidth: 0,
+    color: '#1e293b',
+    backgroundColor: 'transparent',
+    fontSize: 14,
+  },
+  datePickerButton: { minWidth: 28, alignItems: 'center', justifyContent: 'center' },
   field: { gap: 5 },
   halfField: { flex: 1, minWidth: 0 },
   dropdownDisabled: { backgroundColor: '#f8fafc', opacity: 0.7 },
   label: { color: '#475569', fontSize: 12, fontWeight: '700' },
-  dateHint: { color: '#64748b', fontSize: 12 },
+  datePickerIcon: { color: '#64748b', fontSize: 16 },
   input: {
     minHeight: 46,
     borderWidth: 1,

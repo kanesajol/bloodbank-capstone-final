@@ -155,6 +155,7 @@ class BloodCollectionController extends Controller
             'barangay' => ['required', 'string', 'max:255'],
             'municipality' => ['required', 'string', 'max:255'],
             'province' => ['nullable', 'string', 'max:255'],
+            'birthdate' => ['nullable', 'date', 'before_or_equal:today'],
             ...$this->screeningRules($request, $usingScreening),
         ]);
 

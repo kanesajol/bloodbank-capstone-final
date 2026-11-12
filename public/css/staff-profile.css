@@ -190,6 +190,10 @@
   font-weight: 700;
 }
 
+.profile-right-content .password-input {
+  position: relative;
+}
+
 .profile-right-content .form-field input,
 .profile-right-content .form-field select {
   width: 100%;
@@ -203,6 +207,31 @@
   font: inherit;
   font-size: 0.85rem;
   transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.profile-right-content .password-input > input {
+  padding-right: 4rem;
+}
+
+.profile-right-content .password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.65rem;
+  transform: translateY(-50%);
+  border: 0;
+  padding: 0.25rem;
+  background: transparent;
+  color: #990000;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.profile-right-content .password-toggle:focus-visible {
+  outline: 2px solid #990000;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .profile-right-content .form-field input:hover,

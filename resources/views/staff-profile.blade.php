@@ -83,15 +83,24 @@
                             <div class="form-grid">
                                 <div class="form-field">
                                     <label for="currentPassword">Current Password</label>
-                                    <input id="currentPassword" name="current_password" type="password" required autocomplete="current-password">
+                                    <div class="password-input">
+                                        <input id="currentPassword" name="current_password" type="password" required autocomplete="current-password">
+                                        <button type="button" class="password-toggle" data-password-toggle aria-controls="currentPassword" aria-label="Show password" aria-pressed="false">Show</button>
+                                    </div>
                                 </div>
                                 <div class="form-field">
                                     <label for="newPassword">New Password</label>
-                                    <input id="newPassword" name="password" type="password" required minlength="6" autocomplete="new-password">
+                                    <div class="password-input">
+                                        <input id="newPassword" name="password" type="password" required minlength="6" autocomplete="new-password">
+                                        <button type="button" class="password-toggle" data-password-toggle aria-controls="newPassword" aria-label="Show password" aria-pressed="false">Show</button>
+                                    </div>
                                 </div>
                                 <div class="form-field">
                                     <label for="confirmPassword">Confirm New Password</label>
-                                    <input id="confirmPassword" name="password_confirmation" type="password" required minlength="6" autocomplete="new-password">
+                                    <div class="password-input">
+                                        <input id="confirmPassword" name="password_confirmation" type="password" required minlength="6" autocomplete="new-password">
+                                        <button type="button" class="password-toggle" data-password-toggle aria-controls="confirmPassword" aria-label="Show password" aria-pressed="false">Show</button>
+                                    </div>
                                 </div>
                             </div>
                             <button class="profile-submit" type="submit">

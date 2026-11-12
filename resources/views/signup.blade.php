@@ -45,12 +45,18 @@
                         </div>
                         <div class="field">
                             <label for="password">Password</label>
-                            <input id="password" name="password" type="password" required autocomplete="new-password">
+                            <div class="password-input">
+                                <input id="password" name="password" type="password" required autocomplete="new-password">
+                                <button type="button" class="password-toggle" data-password-toggle aria-controls="password" aria-label="Show password" aria-pressed="false">Show</button>
+                            </div>
                             @error('password')<p class="error">{{ $message }}</p>@enderror
                         </div>
                         <div class="field">
                             <label for="passwordConfirmation">Confirm Password</label>
-                            <input id="passwordConfirmation" name="password_confirmation" type="password" required autocomplete="new-password">
+                            <div class="password-input">
+                                <input id="passwordConfirmation" name="password_confirmation" type="password" required autocomplete="new-password">
+                                <button type="button" class="password-toggle" data-password-toggle aria-controls="passwordConfirmation" aria-label="Show password" aria-pressed="false">Show</button>
+                            </div>
                         </div>
                         <button type="submit" class="btn-signin">Sign Up</button>
                     </form>
@@ -59,5 +65,6 @@
             </div>
         </div>
     </div>
+    <script src="{{ asset('js/password-visibility.js') }}"></script>
 </body>
 </html>

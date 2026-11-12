@@ -29,7 +29,10 @@
                         </div>
                         <div class="field">
                             <label for="password">Password</label>
-                            <input id="password" name="password" type="password" required autocomplete="current-password">
+                            <div class="password-input">
+                                <input id="password" name="password" type="password" required autocomplete="current-password">
+                                <button type="button" class="password-toggle" data-password-toggle aria-controls="password" aria-label="Show password" aria-pressed="false">Show</button>
+                            </div>
                         </div>
                         @error('username')
                             <p class="error">{{ $message }}</p>
@@ -41,5 +44,6 @@
             </div>
         </div>
     </div>
+    <script src="{{ asset('js/password-visibility.js') }}"></script>
 </body>
 </html>

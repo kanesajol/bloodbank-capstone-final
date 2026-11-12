@@ -12,6 +12,28 @@
   transition: padding 0.35s ease;
 }
 
+@media (max-width: 900px) {
+  .login-card {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .login-card.is-signup {
+    margin-block: auto;
+  }
+
+  .field input,
+  .field select,
+  .btn-signin {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .login-card.is-signup .field input {
+    font-size: 16px;
+  }
+}
+
 .logo {
   width: 95px;
   height: 95px;
@@ -57,6 +79,35 @@
   color: #1e293b;
   box-sizing: border-box;
   transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.password-input {
+  position: relative;
+}
+
+.password-input > input {
+  padding-right: 4rem;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.65rem;
+  transform: translateY(-50%);
+  border: 0;
+  padding: 0.25rem;
+  background: transparent;
+  color: #1b5e20;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid #1b5e20;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .field input:focus,
@@ -123,6 +174,10 @@
 .login-card.is-signup .field input {
   padding: 0.4rem 0.7rem;
   font-size: 0.84rem;
+}
+
+.login-card.is-signup .password-input > input {
+  padding-right: 3.5rem;
 }
 
 .login-card.is-signup .btn-signin {

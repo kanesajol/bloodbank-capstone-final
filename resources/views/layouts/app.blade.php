@@ -16,8 +16,8 @@
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/module-page.css') }}">
     <link rel="stylesheet" href="{{ asset('css/behavior.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/mobile-responsive.css') }}">
     @stack('styles')
+    <link rel="stylesheet" href="{{ asset('css/mobile-responsive.css') }}">
 </head>
 <body>
     <div class="dashboard">
@@ -106,7 +106,7 @@
         </div>
     </div>
     <div id="delete-confirm-modal" class="modal-overlay" hidden>
-        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="deleteConfirmTitle">
+        <div class="modal-card" role="dialog" aria-labelledby="deleteConfirmTitle">
             <div class="modal-header">
                 <h3 id="deleteConfirmTitle" class="modal-title">Delete Record</h3>
                 <button type="button" class="modal-close" data-modal-close="delete-confirm-modal" aria-label="Close">
@@ -181,6 +181,7 @@
             });
         })();
     </script>
+    <script src="{{ asset('js/password-visibility.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

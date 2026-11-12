@@ -48,7 +48,10 @@
                                 </div>
                                 <div class="field">
                                     <label for="login-password">Password</label>
-                                    <input id="login-password" name="password" type="password" required autocomplete="current-password">
+                                    <div class="password-input">
+                                        <input id="login-password" name="password" type="password" required autocomplete="current-password">
+                                        <button type="button" class="password-toggle" data-password-toggle aria-controls="login-password" aria-label="Show password" aria-pressed="false">Show</button>
+                                    </div>
                                 </div>
                                 @if ($panel === 'login')
                                     @error('username')
@@ -96,14 +99,20 @@
                                 </div>
                                 <div class="field">
                                     <label for="signup-password">Password</label>
-                                    <input id="signup-password" name="password" type="password" required autocomplete="new-password">
+                                    <div class="password-input">
+                                        <input id="signup-password" name="password" type="password" required autocomplete="new-password">
+                                        <button type="button" class="password-toggle" data-password-toggle aria-controls="signup-password" aria-label="Show password" aria-pressed="false">Show</button>
+                                    </div>
                                     @if ($panel === 'signup')
                                         @error('password')<p class="error">{{ $message }}</p>@enderror
                                     @endif
                                 </div>
                                 <div class="field">
                                     <label for="passwordConfirmation">Confirm Password</label>
-                                    <input id="passwordConfirmation" name="password_confirmation" type="password" required autocomplete="new-password">
+                                    <div class="password-input">
+                                        <input id="passwordConfirmation" name="password_confirmation" type="password" required autocomplete="new-password">
+                                        <button type="button" class="password-toggle" data-password-toggle aria-controls="passwordConfirmation" aria-label="Show password" aria-pressed="false">Show</button>
+                                    </div>
                                 </div>
                                 <button type="submit" class="btn-signin">Sign Up</button>
                             </form>
@@ -196,5 +205,6 @@
             }
         });
     </script>
+    <script src="{{ asset('js/password-visibility.js') }}"></script>
 </body>
 </html>

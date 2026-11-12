@@ -20,7 +20,6 @@ document.addEventListener('click', (event) => {
     const isVisible = input.type === 'password';
 
     input.type = isVisible ? 'text' : 'password';
-    button.textContent = isVisible ? 'Hide' : 'Show';
     button.setAttribute('aria-label', `${isVisible ? 'Hide' : 'Show'} password`);
     button.setAttribute('aria-pressed', String(isVisible));
 });

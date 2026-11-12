@@ -86,28 +86,49 @@
 }
 
 .password-input > input {
-  padding-right: 4rem;
+  padding-right: 3rem;
 }
 
 .password-toggle {
   position: absolute;
   top: 50%;
-  right: 0.65rem;
+  right: 0.45rem;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
   transform: translateY(-50%);
   border: 0;
-  padding: 0.25rem;
+  border-radius: 6px;
+  padding: 0;
   background: transparent;
-  color: #1b5e20;
-  font: inherit;
-  font-size: 0.8rem;
-  font-weight: 600;
+  color: #64748b;
   cursor: pointer;
+  transition: color 0.16s ease, background 0.16s ease;
+}
+
+.password-toggle:hover {
+  color: #1b5e20;
+  background: #f0fdf4;
+}
+
+.password-toggle svg {
+  width: 19px;
+  height: 19px;
+}
+
+.password-toggle__eye-off,
+.password-toggle[aria-pressed="true"] .password-toggle__eye {
+  display: none;
+}
+
+.password-toggle[aria-pressed="true"] .password-toggle__eye-off {
+  display: block;
 }
 
 .password-toggle:focus-visible {
   outline: 2px solid #1b5e20;
   outline-offset: 2px;
-  border-radius: 4px;
 }
 
 .field input:focus,
@@ -177,7 +198,7 @@
 }
 
 .login-card.is-signup .password-input > input {
-  padding-right: 3.5rem;
+  padding-right: 3rem;
 }
 
 .login-card.is-signup .btn-signin {

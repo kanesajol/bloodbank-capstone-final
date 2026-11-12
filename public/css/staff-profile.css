@@ -210,28 +210,49 @@
 }
 
 .profile-right-content .password-input > input {
-  padding-right: 4rem;
+  padding-right: 3rem;
 }
 
 .profile-right-content .password-toggle {
   position: absolute;
   top: 50%;
-  right: 0.65rem;
+  right: 0.45rem;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
   transform: translateY(-50%);
   border: 0;
-  padding: 0.25rem;
+  border-radius: 6px;
+  padding: 0;
   background: transparent;
-  color: #990000;
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 700;
+  color: #64748b;
   cursor: pointer;
+  transition: color 0.16s ease, background 0.16s ease;
+}
+
+.profile-right-content .password-toggle:hover {
+  color: #990000;
+  background: #fff1f2;
+}
+
+.profile-right-content .password-toggle svg {
+  width: 19px;
+  height: 19px;
+}
+
+.profile-right-content .password-toggle__eye-off,
+.profile-right-content .password-toggle[aria-pressed="true"] .password-toggle__eye {
+  display: none;
+}
+
+.profile-right-content .password-toggle[aria-pressed="true"] .password-toggle__eye-off {
+  display: block;
 }
 
 .profile-right-content .password-toggle:focus-visible {
   outline: 2px solid #990000;
   outline-offset: 2px;
-  border-radius: 4px;
 }
 
 .profile-right-content .form-field input:hover,

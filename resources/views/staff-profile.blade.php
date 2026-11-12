@@ -85,21 +85,30 @@
                                     <label for="currentPassword">Current Password</label>
                                     <div class="password-input">
                                         <input id="currentPassword" name="current_password" type="password" required autocomplete="current-password">
-                                        <button type="button" class="password-toggle" data-password-toggle aria-controls="currentPassword" aria-label="Show password" aria-pressed="false">Show</button>
+                                        <button type="button" class="password-toggle" data-password-toggle aria-controls="currentPassword" aria-label="Show password" aria-pressed="false">
+                                            <svg class="password-toggle__eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            <svg class="password-toggle__eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 5.2A10.7 10.7 0 0 1 12 5c6.4 0 10 7 10 7a15.7 15.7 0 0 1-3.1 3.9M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7a10.5 10.5 0 0 0 3-.4"/></svg>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="form-field">
                                     <label for="newPassword">New Password</label>
                                     <div class="password-input">
                                         <input id="newPassword" name="password" type="password" required minlength="6" autocomplete="new-password">
-                                        <button type="button" class="password-toggle" data-password-toggle aria-controls="newPassword" aria-label="Show password" aria-pressed="false">Show</button>
+                                        <button type="button" class="password-toggle" data-password-toggle aria-controls="newPassword" aria-label="Show password" aria-pressed="false">
+                                            <svg class="password-toggle__eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            <svg class="password-toggle__eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 5.2A10.7 10.7 0 0 1 12 5c6.4 0 10 7 10 7a15.7 15.7 0 0 1-3.1 3.9M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7a10.5 10.5 0 0 0 3-.4"/></svg>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="form-field">
                                     <label for="confirmPassword">Confirm New Password</label>
                                     <div class="password-input">
                                         <input id="confirmPassword" name="password_confirmation" type="password" required minlength="6" autocomplete="new-password">
-                                        <button type="button" class="password-toggle" data-password-toggle aria-controls="confirmPassword" aria-label="Show password" aria-pressed="false">Show</button>
+                                        <button type="button" class="password-toggle" data-password-toggle aria-controls="confirmPassword" aria-label="Show password" aria-pressed="false">
+                                            <svg class="password-toggle__eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            <svg class="password-toggle__eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 5.2A10.7 10.7 0 0 1 12 5c6.4 0 10 7 10 7a15.7 15.7 0 0 1-3.1 3.9M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7a10.5 10.5 0 0 0 3-.4"/></svg>
+                                        </button>
                                     </div>
                                 </div>
                             </div>

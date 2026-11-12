@@ -100,17 +100,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const setDialogState = (modal, open) => {
+        if (!modal) return;
+        const card = modal.querySelector('.modal-card');
+        if (card) {
+            if (open) {
+                card.setAttribute('aria-modal', 'true');
+                return;
+            }
+            card.removeAttribute('aria-modal');
+        }
+        if (open) {
+            modal.removeAttribute('hidden');
+            return;
+        }
+        modal.setAttribute('hidden', '');
+    };
+
     document.querySelectorAll('[data-modal-open]').forEach((button) => {
         button.addEventListener('click', () => {
             const modal = document.getElementById(button.dataset.modalOpen);
-            if (modal) modal.removeAttribute('hidden');
+            if (modal) setDialogState(modal, true);
         });
     });
 
     document.querySelectorAll('[data-modal-close]').forEach((button) => {
         button.addEventListener('click', () => {
             const modal = document.getElementById(button.dataset.modalClose);
-            if (modal) modal.setAttribute('hidden', '');
+            if (modal) setDialogState(modal, false);
         });
     });
 
@@ -134,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const input = deleteForm.querySelector(`[name="${name}"]`);
                 if (input) input.value = value;
             });
-            deleteModal.removeAttribute('hidden');
+            setDialogState(deleteModal, true);
         });
     });
 
@@ -145,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location = overlay.dataset.closeUrl;
                 return;
             }
-            overlay.setAttribute('hidden', '');
+            setDialogState(overlay, false);
         });
     });
 

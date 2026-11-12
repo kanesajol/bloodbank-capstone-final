@@ -69,46 +69,10 @@ DB_PASSWORD=
 
 Create the `bloodbank` database in phpMyAdmin, then run `php artisan migrate --seed` again.
 
-### Deploy on Railway
+### Production site (AlwaysData)
 
-Keep Railway's MySQL database as a separate Railway service. In the web service's
-Variables, add the following values. The `MySQL` service name in each reference must
-match the actual database service name:
-
-```env
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://bloodbank-capstone-final-production.up.railway.app
-APP_KEY=<generate privately with php artisan key:generate --show>
-
-DB_CONNECTION=mysql
-DB_HOST=${{MySQL.MYSQLHOST}}
-DB_PORT=${{MySQL.MYSQLPORT}}
-DB_DATABASE=${{MySQL.MYSQLDATABASE}}
-DB_USERNAME=${{MySQL.MYSQLUSER}}
-DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
-
-LOG_CHANNEL=stderr
-LOG_LEVEL=info
-```
-
-Generate `APP_KEY` in a trusted local terminal and paste its output directly into
-Railway's private Variables UI. Do not commit it or share it in logs or chat. Railway's
-`${{MySQL.*}}` references resolve the credentials and internal network address from
-the database service; do not use WAMP's `127.0.0.1` values or the database service's
-public address.
-
-The Railpack build does not cache Laravel configuration. Railway injects Variables
-when the container starts, so Laravel reads the production database settings at
-runtime. The build checks that `pdo_mysql` is available. Laravel logs to standard
-error in production, which Railway collects in Deploy Logs; `APP_DEBUG=false` keeps
-exception details out of public error pages.
-
-The app does not automatically migrate or seed the production database. After
-creating/connecting the MySQL service, confirm that it is the intended database and
-that any existing data is backed up. Then run `php artisan migrate --force` from the
-Railway web service's shell only after reviewing the pending migrations. Do not run
-`db:seed` for production: the demo seeder creates sample staff accounts.
+The production site is [bloodbank.alwaysdata.net](https://bloodbank.alwaysdata.net).
+Deploy updates through AlwaysData; this repository does not deploy automatically.
 
 ## Run the web app
 
@@ -131,7 +95,7 @@ php artisan serve --host=0.0.0.0 --port=8000
 npx expo start
 ```
 
-Press `w` for the browser preview, or scan the QR code with Expo Go. The API base URL is `src/config.js` (`EXPO_PUBLIC_API_URL`, default `http://127.0.0.1:8000/api`). On a physical phone, set that variable to your computer’s LAN address, for example `http://192.168.1.20:8000/api`.
+Press `w` for the browser preview, or scan the QR code with Expo Go. The API base URL in `src/config.js` defaults to `https://bloodbank.alwaysdata.net/api`. To use a local API instead, set `EXPO_PUBLIC_API_URL` before starting Expo, for example `http://192.168.1.20:8000/api` on a physical phone.
 
 `npm run mobile:dev` runs `start-mobile.ps1` if you use that script locally.
 

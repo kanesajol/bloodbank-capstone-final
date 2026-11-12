@@ -4,6 +4,7 @@ import { changeCurrentPassword, updateCurrentProfile } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { colors } from '../theme/layout';
 import { capitalizeWords } from '../collectionForm';
+import PasswordInput from '../components/PasswordInput';
 
 export default function StaffProfileScreen() {
   const { user, applyUserUpdate } = useAuth();
@@ -97,11 +98,32 @@ export default function StaffProfileScreen() {
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>Change password</Text>
         <Text style={styles.label}>Current password</Text>
-        <TextInput style={styles.input} value={currentPassword} onChangeText={setCurrentPassword} secureTextEntry />
+        <PasswordInput
+          accessibilityLabel="Current password"
+          autoComplete="current-password"
+          style={styles.input}
+          textInputStyle={styles.passwordText}
+          value={currentPassword}
+          onChangeText={setCurrentPassword}
+        />
         <Text style={styles.label}>New password</Text>
-        <TextInput style={styles.input} value={password} onChangeText={setPassword} secureTextEntry />
+        <PasswordInput
+          accessibilityLabel="New password"
+          autoComplete="new-password"
+          style={styles.input}
+          textInputStyle={styles.passwordText}
+          value={password}
+          onChangeText={setPassword}
+        />
         <Text style={styles.label}>Confirm new password</Text>
-        <TextInput style={styles.input} value={passwordConfirmation} onChangeText={setPasswordConfirmation} secureTextEntry />
+        <PasswordInput
+          accessibilityLabel="Confirm new password"
+          autoComplete="new-password"
+          style={styles.input}
+          textInputStyle={styles.passwordText}
+          value={passwordConfirmation}
+          onChangeText={setPasswordConfirmation}
+        />
         <Pressable style={[styles.button, savingPassword && styles.buttonDisabled]} onPress={savePassword} disabled={savingPassword}>
           <Text style={styles.buttonText}>{savingPassword ? 'Updating…' : 'Change password'}</Text>
         </Pressable>
@@ -127,6 +149,7 @@ const styles = StyleSheet.create({
   sectionTitle: { color: colors.text, fontSize: 15, fontWeight: '800', marginBottom: 2 },
   label: { color: '#475569', fontSize: 12, fontWeight: '700' },
   input: { minHeight: 44, paddingHorizontal: 11, borderWidth: 1, borderColor: colors.border, borderRadius: 10, color: colors.text, backgroundColor: '#fff', fontSize: 14 },
+  passwordText: { fontSize: 14, color: colors.text },
   readonly: { color: colors.text, fontSize: 13, fontWeight: '600', paddingVertical: 3 },
   button: { minHeight: 46, alignItems: 'center', justifyContent: 'center', marginTop: 5, borderRadius: 11, backgroundColor: colors.primary },
   buttonDisabled: { opacity: 0.65 },

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -9,6 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { fetchDonor, fetchDonorMeta, registerDonor, updateDonor } from '../api/client';
 import { capitalizeWords, composeMbdDate, splitMbdDate, titleCaseText } from '../collectionForm';
 
@@ -30,6 +32,29 @@ function donorNameParts(donor) {
   return { firstName: '', middleName: '', lastName: '', suffix: 'None' };
 }
 
+function parseDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return null;
+  }
+
+  const [year, month, day] = value.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+    return null;
+  }
+
+  return date;
+}
+
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
 export default function RegisterDonorScreen({ navigation, route }) {
   const donorId = route.params?.donorId;
   const [meta, setMeta] = useState(null);
@@ -42,13 +67,15 @@ export default function RegisterDonorScreen({ navigation, route }) {
   const [bloodType, setBloodType] = useState('');
   const [age, setAge] = useState('');
   const [birthdate, setBirthdate] = useState('');
+  const [birthdatePickerVisible, setBirthdatePickerVisible] = useState(false);
+  const [pendingBirthdate, setPendingBirthdate] = useState(new Date());
   const [gender, setGender] = useState('');
   const [contact, setContact] = useState('');
   const [barangay, setBarangay] = useState('');
   const [municipality, setMunicipality] = useState('');
   const [province, setProvince] = useState('Dinagat Islands');
   const [mbdType, setMbdType] = useState('MBD');
-  const [mbdOn, setMbdOn] = useState('');
+  const [mbdOn, setMbdOn] = useState(() => formatDate(new Date()));
   const [status, setStatus] = useState('passed');
   const [serialNumber, setSerialNumber] = useState('');
   const [reservedForPatient, setReservedForPatient] = useState('');
@@ -98,7 +125,7 @@ export default function RegisterDonorScreen({ navigation, route }) {
         if (latestDonation) {
           const mbd = splitMbdDate(latestDonation.mbd_date ?? '');
           setMbdType(mbd.type);
-          setMbdOn(mbd.date);
+          setMbdOn(mbd.date || formatDate(new Date()));
           setSerialNumber(latestDonation.serial_number ?? '');
           setReservedForPatient(latestDonation.reserved_for_px ?? '');
           const reason = latestDonation.reason_for_deferral ?? '';
@@ -151,6 +178,31 @@ export default function RegisterDonorScreen({ navigation, route }) {
     }
   };
 
+  const openBirthdatePicker = () => {
+    setPendingBirthdate(parseDate(birthdate) ?? new Date());
+    setBirthdatePickerVisible(true);
+  };
+
+  const handleBirthdatePickerChange = (event, selectedDate) => {
+    if (Platform.OS === 'android') {
+      setBirthdatePickerVisible(false);
+      if (event.type !== 'set') {
+        return;
+      }
+    }
+
+    if (!selectedDate) {
+      return;
+    }
+
+    if (Platform.OS === 'ios') {
+      setPendingBirthdate(selectedDate);
+      return;
+    }
+
+    updateAgeFromBirthdate(formatDate(selectedDate));
+  };
+
   const saveDonor = async () => {
     setSaving(true);
     setMessage('');
@@ -198,7 +250,6 @@ export default function RegisterDonorScreen({ navigation, route }) {
         suffix: suffix === 'None' ? '' : suffix,
         blood_type: bloodType,
         age: parseInt(age, 10),
-        birthdate,
         gender,
         contact: contact.trim(),
         barangay: savedBarangay,
@@ -300,29 +351,81 @@ export default function RegisterDonorScreen({ navigation, route }) {
       <View style={styles.sectionCard}>
         <SectionHeading number="02" title={donorId ? 'Personal information' : 'Event & personal info'} />
         <FormField label="MBD / Date *">
-          <View style={styles.fieldRow}>
-            <View style={styles.mbdType}>
-              <SelectField value={mbdType} options={['MBD', 'WI']} onChange={setMbdType} placeholder="MBD or WI" />
-            </View>
-            <TextInput
-              style={[styles.input, styles.mbdDate]}
-              value={mbdOn}
-              onChangeText={setMbdOn}
-              placeholder="YYYY-MM-DD"
-              keyboardType="numbers-and-punctuation"
-              accessibilityLabel="MBD date"
-            />
-          </View>
+          <SelectField value={mbdType} options={['MBD', 'WI']} onChange={setMbdType} placeholder="MBD or WI" />
+          <Text style={styles.dateHint}>Event date: {mbdOn}</Text>
         </FormField>
-        <FormField label="Birthdate">
-          <TextInput
-            style={styles.input}
-            value={birthdate}
-            onChangeText={updateAgeFromBirthdate}
-            placeholder="YYYY-MM-DD"
-            keyboardType="numbers-and-punctuation"
-          />
-        </FormField>
+        {donorId ? (
+          <FormField label="Birthdate">
+            {Platform.OS === 'web' ? (
+              <TextInput
+                style={styles.input}
+                value={birthdate}
+                onChangeText={updateAgeFromBirthdate}
+                placeholder="Select birthdate"
+                type="date"
+              />
+            ) : (
+              <Pressable
+                style={styles.dropdown}
+                onPress={openBirthdatePicker}
+                accessibilityRole="button"
+                accessibilityLabel={birthdate || 'Select birthdate'}
+              >
+                <Text style={birthdate ? styles.dropdownValue : styles.dropdownPlaceholder}>
+                  {birthdate || 'Select birthdate'}
+                </Text>
+                <Text style={styles.dropdownArrow}>⌄</Text>
+              </Pressable>
+            )}
+            {Platform.OS === 'android' && birthdatePickerVisible ? (
+              <DateTimePicker
+                value={pendingBirthdate}
+                mode="date"
+                display="default"
+                maximumDate={new Date()}
+                onChange={handleBirthdatePickerChange}
+              />
+            ) : null}
+            <Modal
+              visible={Platform.OS === 'ios' && birthdatePickerVisible}
+              transparent
+              animationType="fade"
+              onRequestClose={() => setBirthdatePickerVisible(false)}
+            >
+              <Pressable style={styles.modalBackdrop} onPress={() => setBirthdatePickerVisible(false)}>
+                <Pressable style={styles.pickerCard} onPress={(event) => event.stopPropagation()}>
+                  <Text style={styles.pickerTitle}>Select birthdate</Text>
+                  <DateTimePicker
+                    value={pendingBirthdate}
+                    mode="date"
+                    display="spinner"
+                    maximumDate={new Date()}
+                    onChange={handleBirthdatePickerChange}
+                  />
+                  <View style={styles.datePickerActions}>
+                    <Pressable
+                      style={styles.datePickerCancel}
+                      onPress={() => setBirthdatePickerVisible(false)}
+                      accessibilityRole="button"
+                    >
+                      <Text style={styles.pickerCancelText}>Cancel</Text>
+                    </Pressable>
+                    <Pressable
+                      style={styles.datePickerConfirm}
+                      onPress={() => {
+                        updateAgeFromBirthdate(formatDate(pendingBirthdate));
+                        setBirthdatePickerVisible(false);
+                      }}
+                      accessibilityRole="button"
+                    >
+                      <Text style={styles.datePickerConfirmText}>Done</Text>
+                    </Pressable>
+                  </View>
+                </Pressable>
+              </Pressable>
+            </Modal>
+          </FormField>
+        ) : null}
         <View style={styles.fieldRow}>
           <FormField label="Age *" style={styles.halfField}>
             <TextInput
@@ -612,10 +715,9 @@ const styles = StyleSheet.create({
   fieldRow: { flexDirection: 'row', gap: 10 },
   field: { gap: 5 },
   halfField: { flex: 1, minWidth: 0 },
-  mbdType: { width: 108 },
-  mbdDate: { flex: 1, minWidth: 0 },
   dropdownDisabled: { backgroundColor: '#f8fafc', opacity: 0.7 },
   label: { color: '#475569', fontSize: 12, fontWeight: '700' },
+  dateHint: { color: '#64748b', fontSize: 12 },
   input: {
     minHeight: 46,
     borderWidth: 1,
@@ -711,6 +813,24 @@ const styles = StyleSheet.create({
   pickerCheck: { color: '#990000', fontWeight: '800' },
   pickerCancel: { minHeight: 42, alignItems: 'center', justifyContent: 'center', marginTop: 4 },
   pickerCancelText: { color: '#64748b', fontSize: 13, fontWeight: '700' },
+  datePickerActions: { flexDirection: 'row', gap: 10, marginTop: 8 },
+  datePickerCancel: {
+    flex: 1,
+    minHeight: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    backgroundColor: '#f1f5f9',
+  },
+  datePickerConfirm: {
+    flex: 1,
+    minHeight: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    backgroundColor: '#990000',
+  },
+  datePickerConfirmText: { color: '#fff', fontSize: 13, fontWeight: '700' },
   button: {
     minHeight: 49,
     backgroundColor: '#990000',

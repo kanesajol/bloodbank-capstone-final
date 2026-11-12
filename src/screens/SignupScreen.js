@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { capitalizeWords } from '../collectionForm';
+import PasswordInput from '../components/PasswordInput';
 
 export default function SignupScreen({ onBack, onLogin }) {
   const { signUp } = useAuth();
@@ -108,21 +109,21 @@ export default function SignupScreen({ onBack, onLogin }) {
             onChangeText={setContact}
           />
           <Text style={styles.inputLabel}>Password</Text>
-          <TextInput
+          <PasswordInput
+            accessibilityLabel="Password"
             style={styles.input}
             placeholder="Create a password"
             placeholderTextColor="#9b8a8a"
-            secureTextEntry
             autoComplete="new-password"
             value={password}
             onChangeText={setPassword}
           />
           <Text style={styles.inputLabel}>Confirm password</Text>
-          <TextInput
+          <PasswordInput
+            accessibilityLabel="Confirm password"
             style={styles.input}
             placeholder="Enter your password again"
             placeholderTextColor="#9b8a8a"
-            secureTextEntry
             autoComplete="new-password"
             value={passwordConfirmation}
             onChangeText={setPasswordConfirmation}

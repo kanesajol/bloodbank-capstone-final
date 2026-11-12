@@ -12,6 +12,28 @@
   transition: padding 0.35s ease;
 }
 
+@media (max-width: 900px) {
+  .login-card {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .login-card.is-signup {
+    margin-block: auto;
+  }
+
+  .field input,
+  .field select,
+  .btn-signin {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .login-card.is-signup .field input {
+    font-size: 16px;
+  }
+}
+
 .logo {
   width: 95px;
   height: 95px;

@@ -205,17 +205,30 @@
 @media (max-width: 900px) {
   .login-page {
     background-position: 70% center;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
+
   .login-page__container {
     flex-direction: column;
     justify-content: center;
+    height: 100%;
+    min-height: 100%;
   }
+
   .login-page__branding-spacer {
     display: none;
   }
+
   .login-page__form-container {
     flex: 1;
-    padding: 1rem 1.5rem;
+    align-items: center;
+    height: 100%;
+    min-height: 100%;
+    padding: 1.25rem 1rem;
     width: 100%;
     box-sizing: border-box;
   }

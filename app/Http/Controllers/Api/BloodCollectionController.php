@@ -98,7 +98,7 @@ class BloodCollectionController extends Controller
             'initial_donation_date' => [$usingScreening ? 'nullable' : 'required', 'date'],
             'donation_location' => [$usingScreening ? 'nullable' : 'required', 'string', 'max:255'],
             'mbd_date' => [$usingScreening ? 'required' : 'nullable', 'string', 'max:100'],
-            'birthdate' => [$usingScreening ? 'required' : 'nullable', 'date', 'before_or_equal:today'],
+            'birthdate' => ['nullable', 'date', 'before_or_equal:today'],
             'status' => [$usingScreening ? 'required' : 'nullable', Rule::in(['passed', 'deferred'])],
             'serial_number' => [
                 'nullable',
@@ -393,7 +393,7 @@ class BloodCollectionController extends Controller
         }
 
         try {
-            DB::transaction(function () use ($donor, $attributes, $validated, $latestDonation): void {
+            DB::transaction(function () use ($donor, $attributes, $validated, $latestDonation, $request): void {
                 $donor->update($attributes);
                 $status = $validated['status'] ?? null;
                 if (! in_array($status, ['passed', 'deferred'], true)) {

@@ -10,6 +10,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.crh.bloodbank",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -23,7 +24,14 @@
     "plugins": [
       "expo-secure-store",
       "expo-asset",
-      "expo-font"
-    ]
+      "expo-font",
+      "@react-native-community/datetimepicker"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "bdaf95c5-7657-4d52-9057-4f84b7229b3f"
+      }
+    },
+    "owner": "kane12345"
   }
 }

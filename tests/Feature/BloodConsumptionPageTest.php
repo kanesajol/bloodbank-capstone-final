@@ -249,6 +249,33 @@ class BloodConsumptionPageTest extends TestCase
             ->assertJsonPath('limitNote', '');
     }
 
+    public function test_patient_search_counts_distinct_normalized_names_and_ignores_null_and_empty_names(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        foreach (['  DOE ,  JANE   ANN  ', 'doe, jane ann', 'Odd,,Patient', null, ''] as $patientName) {
+            ConsumptionRecord::query()->create([
+                'patient_name' => $patientName,
+                'age' => 35,
+                'sex' => 'F',
+                'blood_component' => 'Packed RBC',
+                'location' => 'Placer',
+                'number_of_bags' => 1,
+                'month' => 1,
+                'year' => 2026,
+                'reporting_period' => 'January 2026',
+                'date_submitted' => '2026-01-31',
+            ]);
+        }
+
+        $this->getJson('/dashboard/blood-consumption?search_json=1')
+            ->assertOk()
+            ->assertJsonPath('names', ['DOE, JANE ANN', 'ODD, , PATIENT'])
+            ->assertJsonPath('matchTotal', 2)
+            ->assertJsonPath('visibleCount', 2)
+            ->assertJsonPath('limitNote', '');
+    }
+
     public function test_consumption_store_rejects_invalid_bag_totals(): void
     {
         $this->actingAs(User::factory()->create());

@@ -498,7 +498,7 @@
             font-weight: 600;
         }
         .summary-grid {
-            grid-template-columns: repeat(8, minmax(0, 1fr));
+            grid-template-columns: repeat(9, minmax(0, 1fr));
         }
         .summary-grid .summary-card span {
             white-space: normal;
@@ -535,6 +535,68 @@
         .province-tab:not(.is-active):hover {
             background: #f8fafc;
             border-color: #cbd5e1;
+        }
+        @media (max-width: 640px) {
+            .consumption-module .location-nav {
+                width: 100%;
+                min-width: 0;
+                max-width: 100%;
+                overflow: hidden;
+            }
+            .consumption-module .province-tabs {
+                flex-wrap: nowrap;
+                max-width: 100%;
+                overflow-x: auto;
+                overflow-y: hidden;
+                padding: 2px 2px 8px;
+                overscroll-behavior-x: contain;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+            }
+            .consumption-module .province-tab {
+                flex: 0 0 auto;
+                white-space: nowrap;
+            }
+            .consumption-module #consumption-summary {
+                display: flex;
+                flex: 0 0 auto;
+                flex-wrap: nowrap;
+                align-items: flex-start;
+                width: 100%;
+                min-width: 0;
+                max-width: 100%;
+                overflow-x: auto;
+                overflow-y: hidden;
+                overscroll-behavior-x: contain;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+            }
+            .consumption-module #consumption-summary .summary-card {
+                flex: 0 0 104px;
+                width: 104px;
+                min-width: 104px;
+                height: auto;
+                align-self: flex-start;
+                padding: 6px;
+            }
+            .consumption-module #consumption-summary .summary-card span {
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .consumption-module #consumption-results > .search-input-wrap {
+                flex: 0 1 auto;
+                width: 100%;
+                min-width: 0;
+                max-width: 100%;
+            }
+            .consumption-module #consumption-results > .search-input-wrap .search-input {
+                width: 100%;
+                min-width: 0;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
         }
     </style>
 @endpush

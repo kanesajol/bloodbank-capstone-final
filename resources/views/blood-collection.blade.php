@@ -279,6 +279,81 @@
             padding-top: 12px;
             border-top: 1px solid #E8C8C8;
         }
+        @media (max-width: 640px) {
+            .search-donor .results-count-row {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: nowrap;
+                width: 100%;
+                min-width: 0;
+                gap: 8px;
+            }
+            .search-donor .results-count {
+                flex: 1 1 auto;
+                min-width: 0;
+                text-align: left;
+            }
+            .search-donor .btn-delete-all {
+                flex: 0 0 auto;
+                margin-left: auto;
+            }
+            .search-donor #location-year-filters {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                align-items: center;
+                gap: 8px;
+                width: 100%;
+                min-width: 0;
+            }
+            .search-donor #location-year-filters .search-input-wrap {
+                flex: initial;
+                width: auto;
+                min-width: 0;
+                max-width: none;
+            }
+            .search-donor #location-year-filters .search-input {
+                width: 100%;
+                min-width: 0;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            .search-donor #location-year-filters .filter-year-wrap {
+                flex: 0 0 auto;
+                justify-content: center;
+                gap: 4px;
+                min-height: 44px;
+                padding: 0 8px;
+                border: 1px solid #E8C8C8;
+                border-radius: 8px;
+                background: #fff;
+                white-space: nowrap;
+            }
+            .search-donor #location-year-filters .filter-select {
+                width: 76px;
+                min-width: 0;
+                padding: 6px 4px;
+            }
+            .search-donor #location-year-results .record-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .search-donor #location-year-results .record-donor-info {
+                min-width: 0;
+                flex-wrap: wrap;
+            }
+            .search-donor #location-year-results .record-donor-info .donor-name-link {
+                flex: 1 1 100%;
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+            .search-donor #location-year-results .record-date-badge {
+                align-self: flex-start;
+                max-width: 100%;
+            }
+        }
     </style>
 @endpush
 
@@ -1023,10 +1098,6 @@
                                             <input id="regMbdDate" name="mbd_date" value="{{ old('mbd_date') }}" type="hidden" data-mbd-value>
                                         </div>
                                         <div class="form-field">
-                                            <label for="regBirthdate">Birthdate</label>
-                                            <input id="regBirthdate" name="birthdate" value="{{ old('birthdate') }}" type="date" required>
-                                        </div>
-                                        <div class="form-field">
                                             <label for="regAge">Age</label>
                                             <input id="regAge" name="age" value="{{ old('age') }}" type="number" min="16" max="70" required>
                                         </div>
@@ -1134,8 +1205,6 @@
                                 const deferred = form.querySelector('[data-outcome="deferred"]');
                                 const reason = document.getElementById('regDeferralReason');
                                 const custom = form.querySelector('[data-custom-reason]');
-                                const birthdate = document.getElementById('regBirthdate');
-                                const age = document.getElementById('regAge');
                                 const sync = () => {
                                     const status = form.querySelector('input[name="status"]:checked')?.value || 'passed';
                                     if (passed) passed.hidden = status !== 'passed';
@@ -1146,15 +1215,6 @@
                                     input.addEventListener('change', sync);
                                 });
                                 reason?.addEventListener('change', sync);
-                                birthdate?.addEventListener('change', () => {
-                                    if (!birthdate.value || !age) return;
-                                    const born = new Date(birthdate.value + 'T00:00:00');
-                                    const today = new Date();
-                                    let years = today.getFullYear() - born.getFullYear();
-                                    const month = today.getMonth() - born.getMonth();
-                                    if (month < 0 || (month === 0 && today.getDate() < born.getDate())) years -= 1;
-                                    if (years >= 16 && years <= 70) age.value = String(years);
-                                });
                                 sync();
                             })();
                         </script>

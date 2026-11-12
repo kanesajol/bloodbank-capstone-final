@@ -201,6 +201,7 @@ class BloodCollectionLocationDonorsTest extends TestCase
         $this->get('/dashboard/blood-collection?mode=name&donor='.$donor->id.'&edit=1')
             ->assertOk()
             ->assertSee('class="page-panel" id="edit-donor-modal"', false)
+            ->assertSee('id="editBirthdate"', false)
             ->assertSee('Edit Donor Info', false);
     }
 
@@ -212,6 +213,7 @@ class BloodCollectionLocationDonorsTest extends TestCase
             ->assertOk()
             ->assertSee('name="mbd_type"', false)
             ->assertSee('name="mbd_on"', false)
+            ->assertDontSee('id="regBirthdate"', false)
             ->assertSee('type="date"', false)
             ->assertSeeInOrder(['Province', 'Municipality / City', 'Barangay'], false);
 
@@ -228,7 +230,6 @@ class BloodCollectionLocationDonorsTest extends TestCase
             'barangay' => 'Central (Poblacion)',
             'mbd_type' => 'WI',
             'mbd_on' => '2025-01-01',
-            'birthdate' => '1998-01-01',
             'status' => 'passed',
             'serial_number' => 'SN-100',
             'reserved_for_px' => 'juan dela cruz',
@@ -239,6 +240,7 @@ class BloodCollectionLocationDonorsTest extends TestCase
             'province' => 'Surigao del Norte',
             'municipality' => 'Placer',
             'barangay' => 'Central (Poblacion)',
+            'birthdate' => null,
         ]);
         $this->assertDatabaseHas('donations', [
             'mbd_date' => 'WI 01/01/2025',

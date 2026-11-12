@@ -462,7 +462,7 @@ class BloodCollectionController extends Controller
 
         return [
             'mbd_date' => ['required', 'string', 'max:100'],
-            'birthdate' => ['required', 'date', 'before_or_equal:today'],
+            'birthdate' => ['nullable', 'date', 'before_or_equal:today'],
             'status' => ['required', Rule::in(['passed', 'deferred'])],
             'serial_number' => ['nullable', 'string', 'max:100', Rule::requiredIf(fn () => $request->input('status') === 'passed')],
             'reserved_for_px' => ['nullable', 'string', 'max:255'],

@@ -7,7 +7,6 @@ use App\Models\Donor;
 use App\Models\User;
 use App\Services\ReportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
@@ -21,13 +20,6 @@ class MobileApiTest extends TestCase
         parent::setUp();
 
         URL::forceRootUrl('http://localhost');
-        if (DB::connection()->getDriverName() === 'sqlite') {
-            DB::connection()->getPdo()->sqliteCreateFunction(
-                'REGEXP_REPLACE',
-                static fn (string $subject, string $pattern, string $replacement): string => preg_replace('/'.$pattern.'/u', $replacement, $subject) ?? $subject,
-                3
-            );
-        }
     }
 
     public function test_api_login_route_is_registered(): void
@@ -191,6 +183,42 @@ class MobileApiTest extends TestCase
             'donor_id' => $donor->id,
             'mbd_date' => 'MBD 11/08/2026',
             'location' => 'MBD',
+        ]);
+    }
+
+    public function test_mobile_first_time_donor_registration_does_not_require_birthdate(): void
+    {
+        User::factory()->create([
+            'username' => 'mobile-no-birthdate-staff',
+            'password' => 'secret123',
+            'status' => 'Active',
+        ]);
+
+        $token = $this->postJson('/api/login', [
+            'username' => 'mobile-no-birthdate-staff',
+            'password' => 'secret123',
+        ])->json('token');
+
+        $response = $this->withToken($token)
+            ->postJson('/api/donors', [
+                'last_name' => 'Reyes',
+                'first_name' => 'Ana',
+                'contact' => '09123456780',
+                'mbd_date' => 'MBD 11/10/2026',
+                'age' => 28,
+                'gender' => 'Female',
+                'blood_type' => 'O+',
+                'barangay' => 'Poblacion',
+                'municipality' => 'Tubajon',
+                'province' => 'Dinagat Islands',
+                'status' => 'passed',
+                'serial_number' => 'BAG-2026-002',
+            ]);
+
+        $response->assertCreated();
+        $this->assertDatabaseHas('donors', [
+            'full_name' => 'REYES, ANA',
+            'birthdate' => null,
         ]);
     }
 

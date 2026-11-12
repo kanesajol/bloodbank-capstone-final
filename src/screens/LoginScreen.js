@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { API_BASE_URL } from '../config';
+import PasswordInput from '../components/PasswordInput';
 
 export default function LoginScreen({ onBack, onSignUp }) {
   const { signIn } = useAuth();
@@ -67,11 +68,12 @@ export default function LoginScreen({ onBack, onSignUp }) {
             onChangeText={setUsername}
           />
           <Text style={styles.inputLabel}>Password</Text>
-          <TextInput
+          <PasswordInput
+            accessibilityLabel="Password"
+            autoComplete="current-password"
             style={styles.input}
             placeholder="Enter your password"
             placeholderTextColor="#9b8a8a"
-            secureTextEntry
             value={password}
             onChangeText={setPassword}
           />

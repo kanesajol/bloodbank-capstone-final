@@ -5,7 +5,8 @@ html {
 }
 
 .dashboard {
-  overflow-x: clip;
+  width: 100%;
+  min-width: 0;
 }
 
 .dashboard__content {
@@ -14,7 +15,7 @@ html {
 }
 
 .dashboard__main {
-  overflow-x: clip;
+  min-width: 0;
 }
 
 .module-page__content {
@@ -208,5 +209,630 @@ body.dashboard--drawer-open {
 @media (max-width: 480px) {
   .header__username {
     display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard,
+  .dashboard__content {
+    height: auto !important;
+    min-height: 100vh;
+    min-height: 100dvh;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .dashboard__content {
+    flex: 1 1 0;
+  }
+
+  .dashboard__main {
+    flex: 1 0 auto;
+    width: 100%;
+    padding: 1rem 0.85rem 1.5rem;
+    overflow: visible !important;
+  }
+
+  .module-page,
+  .module-page__content,
+  .overview,
+  .reports-module,
+  .staff-module,
+  .consumption-module,
+  .search-donor,
+  .profile-layout,
+  .profile-right-content,
+  .panel,
+  .report-section {
+    min-width: 0;
+  }
+
+  .module-page__content {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible !important;
+    padding: 1rem;
+  }
+
+  .module-page__header {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .header {
+    min-width: 0;
+    gap: 0.5rem;
+    padding-inline: 0.85rem;
+  }
+
+  .header__icon-btn,
+  .header__user-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .sidebar__item {
+    min-height: 44px;
+  }
+
+  .modal-close,
+  .guidelines-modal__close,
+  .login-corner-btn,
+  .staff-delete-btn,
+  .action-icon,
+  .btn-view-profile,
+  .donor-table__view {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .table-wrap,
+  .history-table-wrap,
+  .staff-log-wrap,
+  #name-search-table-wrap,
+  .consumption-module .table-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow: auto !important;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-wrap table,
+  .history-table-wrap table,
+  .staff-log-wrap table {
+    max-width: none;
+  }
+
+  .table-wrap table {
+    width: max-content;
+    min-width: 520px;
+  }
+
+  .filters-bar,
+  .filters-inline,
+  .filters-inline .filter-group,
+  .module-controls-bar,
+  .collection-header-bar,
+  .search-bar-wrap,
+  .results-count-row,
+  .panel-header,
+  .panel-header__actions,
+  .controls-actions,
+  .form-actions,
+  .modal-actions,
+  .patient-history-header,
+  .patient-history-actions,
+  .day-log-form {
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  .search-input-wrap,
+  .filters-bar .search-input-wrap,
+  .filters-bar .filter-select,
+  .filters-bar .reset-btn,
+  .panel-header__search,
+  .filter-input,
+  .filter-select,
+  .day-log-form input {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .filters-bar .search-input-wrap,
+  .filters-bar .filter-select,
+  .filters-bar .reset-btn,
+  .panel-header__search {
+    width: 100%;
+  }
+
+  .form-grid,
+  .form-row,
+  .modal-grid,
+  .profile-right-content .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form-grid > *,
+  .form-row > *,
+  .modal-grid > * {
+    min-width: 0;
+  }
+
+  .modal-overlay,
+  .modal-backdrop {
+    align-items: flex-start;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  }
+
+  .modal-card,
+  .register-modal-card,
+  .donor-detail-card,
+  .guidelines-modal__dialog {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 24px);
+    margin-block: auto;
+    overflow: auto;
+  }
+
+  .profile-card {
+    position: static;
+  }
+
+  .staff-module,
+  .tab-content-panel {
+    flex: 1 1 auto !important;
+    min-height: 0;
+    overflow: visible !important;
+  }
+
+  .staff-module .table-wrap {
+    flex: 0 1 auto !important;
+    min-height: 10rem;
+    max-height: min(60vh, 32rem);
+  }
+
+  .staff-table {
+    min-width: 680px;
+  }
+
+  .reports-header-controls {
+    flex-wrap: wrap !important;
+    align-items: stretch !important;
+  }
+
+  .reports-header-controls .report-select-group {
+    min-width: 0;
+    flex: 1 1 14rem;
+  }
+
+  .report-nav {
+    max-width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .report-nav-pill {
+    flex: 0 0 auto;
+    min-height: 44px;
+  }
+
+  .report-dropdown-select,
+  .header-location-input,
+  .filter-select,
+  .filter-input,
+  .form-field input,
+  .form-field select,
+  .form-field textarea,
+  .consumption-form input,
+  .consumption-form select,
+  .profile-form input,
+  .profile-form select,
+  .profile-form textarea,
+  .staff-form input,
+  .staff-form select,
+  .staff-form textarea {
+    min-width: 0;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-add,
+  .btn-register-donor,
+  .btn-submit,
+  .btn-cancel,
+  .btn-print,
+  .profile-submit,
+  .btn-signin,
+  .mode-tab,
+  .patient-mode-option,
+  .form-actions button,
+  .modal-actions button {
+    min-height: 44px;
+  }
+
+  .patient-history-title,
+  .profile-name,
+  .detail-val,
+  .staff-name,
+  .panel-header__title,
+  .box-title {
+    overflow-wrap: anywhere;
+  }
+
+  .profile-details-list .detail-item {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard__main {
+    padding: 0.75rem 0.65rem 1.25rem;
+  }
+
+  .module-page__content {
+    padding: 0.85rem;
+    border-radius: 10px;
+  }
+
+  .module-page__header {
+    margin-bottom: 0.85rem;
+  }
+
+  .module-page__header h2,
+  .module-controls-bar h2 {
+    font-size: 1.15rem;
+    line-height: 1.35;
+  }
+
+  .header {
+    height: 60px;
+    padding-inline: 0.65rem;
+  }
+
+  .header__actions {
+    gap: 0.35rem;
+  }
+
+  .overview__stats,
+  .kpi-grid,
+  .quarter-grid,
+  .gender-cards-grid,
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .stat-card,
+  .kpi-card,
+  .summary-grid .summary-card {
+    min-width: 0;
+    padding: 0.85rem;
+  }
+
+  .reports-header-controls .report-select-group,
+  .reports-header-controls .header-actions {
+    flex: 1 1 100%;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .reports-header-controls .header-location-input,
+  .reports-header-controls .btn-print {
+    width: 100%;
+    max-width: none;
+  }
+
+  .reports-header-controls .header-period,
+  .reports-header-controls .header-year {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none;
+    flex: 1 1 7rem;
+  }
+
+  .filters-inline .filter-group,
+  .panel-filters,
+  .panel-filters .filter-select {
+    width: 100%;
+  }
+
+  .panel-header .btn-add,
+  .collection-header-bar .mode-tabs,
+  .collection-header-bar .btn-register-donor,
+  .btn-add-donation-sm {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mode-tabs,
+  .form-actions,
+  .modal-actions {
+    width: 100%;
+  }
+
+  .form-actions > *,
+  .modal-actions > * {
+    flex: 1 1 8rem;
+    justify-content: center;
+  }
+
+  .patient-history-actions {
+    justify-content: stretch;
+  }
+
+  .patient-history-actions > * {
+    flex: 1 1 8rem;
+    justify-content: center;
+  }
+
+  .reports-module .card-box,
+  .profile-right-content .card-box {
+    padding: 0.85rem;
+  }
+
+  .report-section,
+  .reports-module,
+  .consumption-module,
+  .overview {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .overview__stats,
+  .kpi-grid,
+  .quarter-grid,
+  .gender-cards-grid,
+  .summary-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .dashboard__main {
+    padding-inline: 0.5rem;
+  }
+
+  .module-page__content {
+    padding: 0.7rem;
+  }
+
+  .modal-overlay,
+  .modal-backdrop {
+    padding-inline: 8px;
+  }
+}
+
+@media (max-width: 767px) {
+  .dashboard__main {
+    background: #fff;
+    padding: 0.875rem 0.75rem 1.5rem;
+  }
+
+  .module-page__content {
+    border: 1px solid #f1e5e5;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(40, 20, 25, 0.05);
+    padding: 1rem;
+  }
+
+  .module-page__header h2,
+  .collection-header-bar h2,
+  .module-controls-bar h2,
+  .panel-header h2,
+  .reports-card-head h2 {
+    color: #990000;
+    font-size: 1.125rem;
+    line-height: 1.4;
+  }
+
+  .search-donor,
+  .consumption-module,
+  .reports-module,
+  .staff-module,
+  .profile-right-content {
+    gap: 0.875rem;
+  }
+
+  .panel,
+  .reports-module .card-box,
+  .profile-card,
+  .profile-right-content .card-box,
+  .location-donor-card,
+  .month-group,
+  .kpi-card,
+  .summary-grid .summary-card {
+    border: 1px solid #e8e2e4;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 2px 7px rgba(40, 20, 25, 0.04);
+  }
+
+  .panel {
+    padding: 0.875rem;
+  }
+
+  .collection-header-bar,
+  .panel-header,
+  .module-controls-bar,
+  .reports-header-bar {
+    gap: 0.75rem;
+  }
+
+  .mode-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .mode-tab {
+    min-width: 0;
+    padding: 0.55rem 0.4rem;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    white-space: normal;
+  }
+
+  .btn-register-donor,
+  .btn-add,
+  .btn-primary,
+  .btn-secondary,
+  .btn-print,
+  .profile-submit,
+  .form-actions button,
+  .modal-actions button {
+    border-radius: 10px;
+  }
+
+  .search-input,
+  .filter-select,
+  .filter-input,
+  .report-dropdown-select,
+  .header-location-input,
+  .form-field input,
+  .form-field select,
+  .form-field textarea,
+  .consumption-form input,
+  .consumption-form select,
+  .profile-form input,
+  .profile-form select,
+  .profile-form textarea,
+  .staff-form input,
+  .staff-form select,
+  .staff-form textarea {
+    border-color: #e2dadd;
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  .summary-grid,
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.625rem;
+  }
+
+  .summary-grid .summary-card,
+  .kpi-card {
+    min-width: 0;
+    padding: 0.75rem;
+  }
+
+  .summary-grid .summary-card span,
+  .kpi-label {
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .table-wrap,
+  .history-table-wrap,
+  .staff-log-wrap,
+  #name-search-table-wrap,
+  .consumption-module .table-wrap {
+    max-width: 100%;
+    border: 1px solid #e8e2e4;
+    border-radius: 10px;
+    background: #fff;
+    overflow-x: auto !important;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .records-table,
+  .donor-table,
+  .report-table,
+  .staff-table,
+  .profile-table {
+    min-width: 520px;
+  }
+
+  .staff-table {
+    min-width: 680px;
+  }
+
+  .reports-header-controls {
+    gap: 0.625rem;
+  }
+
+  .reports-header-controls .report-select-group,
+  .reports-header-controls .header-actions {
+    min-width: 0;
+    gap: 0.5rem;
+  }
+
+  .reports-header-controls .report-select-label {
+    white-space: normal;
+  }
+
+  .report-nav {
+    gap: 0.5rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .report-nav-pill {
+    border-radius: 10px;
+  }
+
+  .consumption-detail-card {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 12px;
+  }
+
+  .consumption-visit-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .patient-name-heading {
+    flex-wrap: wrap;
+  }
+
+  .modal-overlay,
+  .modal-backdrop {
+    align-items: flex-end;
+    padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  }
+
+  .modal-card,
+  .register-modal-card,
+  .donor-detail-card,
+  .guidelines-modal__dialog {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 24px);
+    border-radius: 14px;
+    overflow: auto;
+  }
+
+  .profile-card {
+    position: static;
+    padding: 1rem;
+  }
+
+  .profile-details-list .detail-item {
+    gap: 0.35rem;
+  }
+
+  .profile-details-list .detail-val {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    text-align: right;
+  }
+
+  .day-log-form {
+    width: 100%;
+  }
+
+  .day-log-form input {
+    flex: 1;
+    width: 100%;
   }
 }

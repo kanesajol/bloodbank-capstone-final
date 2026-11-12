@@ -380,7 +380,7 @@ class BloodCollectionController extends Controller
             'municipality' => trim((string) ($validated['municipality'] ?? '')),
             'province' => trim((string) ($validated['province'] ?? ''))
                 ?: BloodBank::provinceForMunicipality((string) ($validated['municipality'] ?? '')),
-            'birthdate' => $validated['birthdate'] ?? null,
+            'birthdate' => $validated['birthdate'] ?? $donor->birthdate,
         ];
 
         if ($usesNameParts) {

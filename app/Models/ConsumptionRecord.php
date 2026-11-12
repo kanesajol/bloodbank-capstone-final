@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
     'location',
     'patient_name',
     'age',
+    'birthdate',
     'sex',
     'blood_component',
     'municipality',
@@ -35,6 +36,7 @@ class ConsumptionRecord extends Model
             'number_of_bags' => 'integer',
             'month' => 'integer',
             'year' => 'integer',
+            'birthdate' => 'date',
             'date_submitted' => 'date',
         ];
     }

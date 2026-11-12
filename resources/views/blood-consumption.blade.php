@@ -763,7 +763,11 @@
                                 </div>
                                 <div class="form-field">
                                     <label for="editPatientAge">Age</label>
-                                    <input id="editPatientAge" name="age" value="{{ old('age', $editingConsumption?->age) }}" type="number" min="0" max="120" required>
+                                    <input id="editPatientAge" name="age" value="{{ old('age', $editingConsumption?->age) }}" type="number" min="0" max="120" data-age required>
+                                </div>
+                                <div class="form-field">
+                                    <label for="editPatientBirthdate">Birthdate</label>
+                                    <input id="editPatientBirthdate" name="birthdate" value="{{ old('birthdate', $editingConsumption?->birthdate?->format('Y-m-d')) }}" type="date" max="{{ now()->toDateString() }}" data-birthdate>
                                 </div>
                                 <div class="form-field">
                                     <label for="editPatientSex">Sex</label>
@@ -872,7 +876,7 @@
                                         disabled
                                     >
                                     <div id="returningPatientOptions" class="patient-suggestions" role="listbox" hidden></div>
-                                    <small id="returningPatientHint">Existing patient details are reused. The date will be set to today.</small>
+                                    <small id="returningPatientHint">Existing age, birthdate, sex and location are reused. The date will be set to today.</small>
                                 </div>
                             </div>
                             <div class="form-grid" data-new-patient-fields>
@@ -903,7 +907,11 @@
                                 </div>
                                 <div class="form-field">
                                     <label for="patientAge">Age</label>
-                                    <input id="patientAge" name="age" value="{{ old('age') }}" type="number" min="0" max="120" required>
+                                    <input id="patientAge" name="age" value="{{ old('age') }}" type="number" min="0" max="120" data-age required>
+                                </div>
+                                <div class="form-field">
+                                    <label for="patientBirthdate">Birthdate</label>
+                                    <input id="patientBirthdate" name="birthdate" value="{{ old('birthdate') }}" type="date" max="{{ now()->toDateString() }}" data-birthdate>
                                 </div>
                                 <div class="form-field">
                                     <label for="patientSex">Sex</label>
@@ -1090,7 +1098,7 @@
                 options.replaceChildren();
                 options.hidden = true;
                 patientInput.setAttribute('aria-expanded', 'false');
-                if (hint) hint.textContent = 'Existing patient details are reused. The date will be set to today.';
+                if (hint) hint.textContent = 'Existing age, birthdate, sex and location are reused. The date will be set to today.';
                 const query = patientInput.value.trim();
                 if (query.length < 1) return;
 
@@ -1125,7 +1133,7 @@
                                     options.replaceChildren();
                                     options.hidden = true;
                                     patientInput.setAttribute('aria-expanded', 'false');
-                                    if (hint) hint.textContent = `Selected ${name}. Existing patient details will be reused.`;
+                                    if (hint) hint.textContent = `Selected ${name}. Existing age, birthdate, sex and location will be reused.`;
                                 });
                                 options.appendChild(option);
                             });
@@ -1147,6 +1155,28 @@
                         });
                 }, 250);
             });
+        })();
+
+        (function () {
+            const bindBirthdateAge = (form) => {
+                const birthdate = form?.querySelector('[data-birthdate]');
+                const age = form?.querySelector('[data-age]');
+                if (!birthdate || !age) return;
+
+                birthdate.addEventListener('change', () => {
+                    if (!birthdate.value) return;
+                    const born = new Date(birthdate.value + 'T00:00:00');
+                    if (Number.isNaN(born.getTime())) return;
+                    const today = new Date();
+                    let years = today.getFullYear() - born.getFullYear();
+                    const month = today.getMonth() - born.getMonth();
+                    if (month < 0 || (month === 0 && today.getDate() < born.getDate())) years -= 1;
+                    if (years >= 0 && years <= 120) age.value = String(years);
+                });
+            };
+
+            bindBirthdateAge(document.querySelector('#consumption-modal .consumption-form'));
+            bindBirthdateAge(document.getElementById('consumption-edit-form'));
         })();
 
         let consumptionHistoryRequest;

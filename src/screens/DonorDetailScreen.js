@@ -90,7 +90,6 @@ export default function DonorDetailScreen({ navigation, route }) {
         <View style={styles.infoGrid}>
           <InfoField label="Age" value={donor.age ? `${donor.age} yrs old` : '—'} />
           <InfoField label="Sex" value={donor.gender || '—'} />
-          <InfoField label="Birthdate" value={donor.birthdate || '—'} />
           <InfoField label="Contact" value={donor.contact || '—'} />
           <InfoField label="Registered date" value={donor.registered_date || '—'} />
           <InfoField label="Donor address" value={donor.address || '—'} />

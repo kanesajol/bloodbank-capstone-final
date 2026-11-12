@@ -66,9 +66,6 @@ export default function RegisterDonorScreen({ navigation, route }) {
   const [suffix, setSuffix] = useState('None');
   const [bloodType, setBloodType] = useState('');
   const [age, setAge] = useState('');
-  const [birthdate, setBirthdate] = useState('');
-  const [birthdatePickerVisible, setBirthdatePickerVisible] = useState(false);
-  const [pendingBirthdate, setPendingBirthdate] = useState(new Date());
   const [gender, setGender] = useState('');
   const [contact, setContact] = useState('');
   const [barangay, setBarangay] = useState('');
@@ -116,7 +113,6 @@ export default function RegisterDonorScreen({ navigation, route }) {
         setSuffix(name.suffix);
         setBloodType(donor.blood_type ?? 'O+');
         setAge(String(donor.age ?? ''));
-        setBirthdate(donor.birthdate_value ?? '');
         setGender(donor.gender ?? 'Male');
         setContact(donor.contact ?? '');
         setBarangay(donor.barangay ?? '');
@@ -156,55 +152,6 @@ export default function RegisterDonorScreen({ navigation, route }) {
     };
   }, [donorId]);
 
-  const updateAgeFromBirthdate = (value) => {
-    setBirthdate(value);
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-      return;
-    }
-
-    const born = new Date(`${value}T00:00:00`);
-    if (Number.isNaN(born.getTime())) {
-      return;
-    }
-
-    const today = new Date();
-    let years = today.getFullYear() - born.getFullYear();
-    if (
-      today.getMonth() < born.getMonth()
-      || (today.getMonth() === born.getMonth() && today.getDate() < born.getDate())
-    ) {
-      years -= 1;
-    }
-    if (years >= 16 && years <= 70) {
-      setAge(String(years));
-    }
-  };
-
-  const openBirthdatePicker = () => {
-    setPendingBirthdate(parseDate(birthdate) ?? new Date());
-    setBirthdatePickerVisible(true);
-  };
-
-  const handleBirthdatePickerChange = (event, selectedDate) => {
-    if (Platform.OS === 'android') {
-      setBirthdatePickerVisible(false);
-      if (event.type !== 'set') {
-        return;
-      }
-    }
-
-    if (!selectedDate) {
-      return;
-    }
-
-    if (Platform.OS === 'ios') {
-      setPendingBirthdate(selectedDate);
-      return;
-    }
-
-    updateAgeFromBirthdate(formatDate(selectedDate));
-  };
-
   const openMbdDatePicker = () => {
     setPendingMbdDate(parseDate(mbdOn) ?? new Date());
     setMbdDatePickerVisible(true);
@@ -232,12 +179,6 @@ export default function RegisterDonorScreen({ navigation, route }) {
       setMessage('Enter a valid MBD / Date in YYYY-MM-DD format.');
       return;
     }
-    const parsedBirthdate = birthdate ? parseDate(birthdate) : null;
-    if (birthdate && (!parsedBirthdate || parsedBirthdate > parseDate(formatDate(new Date())))) {
-      setMessage('Enter a valid birthdate in YYYY-MM-DD format that is not in the future.');
-      return;
-    }
-
     setSaving(true);
     const knownBarangays = meta?.places?.[municipality] ?? [];
     const savedBarangay = knownBarangays.length > 0 ? barangay.trim() : titleCaseText(barangay);
@@ -253,7 +194,6 @@ export default function RegisterDonorScreen({ navigation, route }) {
           } : { full_name: titleCaseText(fullName) }),
           blood_type: bloodType,
           age: age ? parseInt(age, 10) : null,
-          birthdate: birthdate || null,
           gender,
           contact: contact.trim(),
           barangay: savedBarangay,
@@ -283,7 +223,6 @@ export default function RegisterDonorScreen({ navigation, route }) {
         suffix: suffix === 'None' ? '' : suffix,
         blood_type: bloodType,
         age: parseInt(age, 10),
-        birthdate: birthdate || null,
         gender,
         contact: contact.trim(),
         barangay: savedBarangay,
@@ -433,62 +372,6 @@ export default function RegisterDonorScreen({ navigation, route }) {
                     onPress={() => {
                       setMbdOn(formatDate(pendingMbdDate));
                       setMbdDatePickerVisible(false);
-                    }}
-                    accessibilityRole="button"
-                  >
-                    <Text style={styles.datePickerConfirmText}>Done</Text>
-                  </Pressable>
-                </View>
-              </Pressable>
-            </Pressable>
-          </Modal>
-        </FormField>
-        <FormField label="Birthdate">
-          <DateTextField
-            value={birthdate}
-            onChangeText={updateAgeFromBirthdate}
-            onPressCalendar={openBirthdatePicker}
-            accessibilityLabel="Birthdate"
-            style={styles.birthdateControl}
-          />
-          {Platform.OS === 'android' && birthdatePickerVisible ? (
-            <DateTimePicker
-              value={pendingBirthdate}
-              mode="date"
-              display="default"
-              maximumDate={new Date()}
-              onChange={handleBirthdatePickerChange}
-            />
-          ) : null}
-          <Modal
-            visible={Platform.OS === 'ios' && birthdatePickerVisible}
-            transparent
-            animationType="fade"
-            onRequestClose={() => setBirthdatePickerVisible(false)}
-          >
-            <Pressable style={styles.modalBackdrop} onPress={() => setBirthdatePickerVisible(false)}>
-              <Pressable style={styles.pickerCard} onPress={(event) => event.stopPropagation()}>
-                <Text style={styles.pickerTitle}>Select birthdate</Text>
-                <DateTimePicker
-                  value={pendingBirthdate}
-                  mode="date"
-                  display="spinner"
-                  maximumDate={new Date()}
-                  onChange={handleBirthdatePickerChange}
-                />
-                <View style={styles.datePickerActions}>
-                  <Pressable
-                    style={styles.datePickerCancel}
-                    onPress={() => setBirthdatePickerVisible(false)}
-                    accessibilityRole="button"
-                  >
-                    <Text style={styles.pickerCancelText}>Cancel</Text>
-                  </Pressable>
-                  <Pressable
-                    style={styles.datePickerConfirm}
-                    onPress={() => {
-                      updateAgeFromBirthdate(formatDate(pendingBirthdate));
-                      setBirthdatePickerVisible(false);
                     }}
                     accessibilityRole="button"
                   >
@@ -826,7 +709,6 @@ const styles = StyleSheet.create({
   mbdControlRow: { flexDirection: 'row', gap: 10 },
   mbdTypeControl: { width: 110 },
   mbdDateControl: { flex: 1, minWidth: 0 },
-  birthdateControl: { flex: 1, minWidth: 0 },
   dateTextInput: {
     flex: 1,
     minWidth: 0,

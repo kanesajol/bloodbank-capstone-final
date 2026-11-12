@@ -106,6 +106,7 @@
                         <h3>{{ $visit['date'] }}</h3>
                         <dl class="patient-history-details">
                             <div><dt>Age</dt><dd>{{ $visit['age'] }} years</dd></div>
+                            <div><dt>Birthdate</dt><dd>{{ $visit['birthdate'] }}</dd></div>
                             <div><dt>Sex</dt><dd>{{ $visit['sex'] }}</dd></div>
                             <div><dt>Blood component</dt><dd>{{ $visit['component'] }}</dd></div>
                             <div><dt>Units</dt><dd>{{ $visit['units'] }}</dd></div>

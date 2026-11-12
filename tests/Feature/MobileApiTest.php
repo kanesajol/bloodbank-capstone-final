@@ -537,7 +537,6 @@ class MobileApiTest extends TestCase
                 'suffix' => 'Sr.',
                 'blood_type' => 'A+',
                 'age' => 29,
-                'birthdate' => '1997-03-10',
                 'gender' => 'Female',
                 'contact' => '09180000005',
                 'barangay' => 'Washington',
@@ -1048,6 +1047,7 @@ class MobileApiTest extends TestCase
                 'date_submitted' => '2026-04-12',
                 'patient_name' => 'API Patient',
                 'age' => 30,
+                'birthdate' => '1996-04-12',
                 'sex' => 'F',
                 'blood_component' => 'Packed RBC',
                 'units' => 2,
@@ -1061,7 +1061,13 @@ class MobileApiTest extends TestCase
             'patient_name' => 'API PATIENT',
             'province' => 'Surigao del Norte',
             'location' => 'Central (poblacion), Placer, Surigao del Norte',
+            'birthdate' => '1996-04-12 00:00:00',
         ]);
+
+        $this->withToken($token)
+            ->getJson('/api/consumption')
+            ->assertOk()
+            ->assertJsonPath('records.0.birthdate', '1996-04-12');
 
         $report = app(ReportService::class)->consumption('Surigao del Norte', '', '4', '2026');
         $province = $report['provinces']->firstWhere('name', 'Surigao del Norte');
@@ -1097,6 +1103,37 @@ class MobileApiTest extends TestCase
             ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['municipality']);
+
+        $this->assertDatabaseCount('consumption_records', 0);
+    }
+
+    public function test_mobile_consumption_rejects_a_birthdate_after_today(): void
+    {
+        User::factory()->create([
+            'username' => 'consumption-birthdate-staff',
+            'password' => 'secret123',
+            'status' => 'Active',
+        ]);
+
+        $token = $this->postJson('/api/login', [
+            'username' => 'consumption-birthdate-staff',
+            'password' => 'secret123',
+        ])->json('token');
+
+        $this->withToken($token)
+            ->postJson('/api/consumption', [
+                'date_submitted' => '2026-04-12',
+                'patient_name' => 'Future Birthday',
+                'age' => 30,
+                'birthdate' => now()->addDay()->toDateString(),
+                'sex' => 'F',
+                'blood_component' => 'Packed RBC',
+                'units' => 1,
+                'province' => 'Surigao del Norte',
+                'municipality' => 'Placer',
+            ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['birthdate']);
 
         $this->assertDatabaseCount('consumption_records', 0);
     }
@@ -1220,6 +1257,7 @@ class MobileApiTest extends TestCase
                 'location' => 'Tubajon, Dinagat Islands',
                 'patient_name' => $patientName,
                 'age' => 34,
+                'birthdate' => '1994-06-08',
                 'sex' => 'F',
                 'blood_component' => 'Packed RBC',
                 'municipality' => 'Tubajon',
@@ -1238,7 +1276,8 @@ class MobileApiTest extends TestCase
             ->getJson('/api/consumption?details=1&patient=MARIA%20SANTOS&province=Dinagat%20Islands')
             ->assertOk()
             ->assertJsonPath('patient', 'MARIA SANTOS')
-            ->assertJsonCount(2, 'visits');
+            ->assertJsonCount(2, 'visits')
+            ->assertJsonPath('visits.0.birthdate', '1994-06-08');
     }
 
     public function test_mobile_consumption_delete_all_requires_authentication_and_removes_all_records(): void
@@ -1297,6 +1336,7 @@ class MobileApiTest extends TestCase
             'location' => 'Tubajon, Dinagat Islands',
             'patient_name' => 'OLD PATIENT',
             'age' => 34,
+            'birthdate' => '1992-04-12',
             'sex' => 'F',
             'blood_component' => 'Packed RBC',
             'municipality' => 'Tubajon',
@@ -1330,6 +1370,7 @@ class MobileApiTest extends TestCase
             'patient_name' => 'UPDATED PATIENT',
             'date_submitted' => '2026-05-03 00:00:00',
             'age' => 42,
+            'birthdate' => '1992-04-12 00:00:00',
             'sex' => 'M',
             'blood_component' => 'Fresh Frozen Plasma',
             'number_of_bags' => 3,
@@ -1356,6 +1397,7 @@ class MobileApiTest extends TestCase
         ConsumptionRecord::query()->create([
             'patient_name' => 'ANA REYES',
             'age' => 31,
+            'birthdate' => '1995-03-10',
             'sex' => 'F',
             'blood_component' => 'Packed RBC',
             'province' => 'Surigao del Norte',
@@ -1388,6 +1430,7 @@ class MobileApiTest extends TestCase
 
         $record = ConsumptionRecord::query()->whereDate('date_submitted', $today)->orderByDesc('id')->firstOrFail();
         $this->assertSame(31, $record->age);
+        $this->assertSame('1995-03-10', $record->birthdate->toDateString());
         $this->assertSame('F', $record->sex);
         $this->assertSame('Fresh Frozen Plasma', $record->blood_component);
         $this->assertSame(2, $record->number_of_bags);

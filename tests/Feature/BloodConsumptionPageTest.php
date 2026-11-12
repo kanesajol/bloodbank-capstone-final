@@ -88,6 +88,7 @@ class BloodConsumptionPageTest extends TestCase
         $matchingRecord = ConsumptionRecord::query()->create([
             'patient_name' => 'ANA REYES',
             'age' => 35,
+            'birthdate' => '1990-04-12',
             'sex' => 'F',
             'blood_component' => 'Packed RBC',
             'province' => 'Surigao del Norte',
@@ -103,6 +104,7 @@ class BloodConsumptionPageTest extends TestCase
         ConsumptionRecord::query()->create([
             'patient_name' => 'ANA REYES',
             'age' => 35,
+            'birthdate' => '1990-04-12',
             'sex' => 'F',
             'blood_component' => 'Packed RBC',
             'province' => 'Agusan del Sur',
@@ -145,6 +147,7 @@ class BloodConsumptionPageTest extends TestCase
         ConsumptionRecord::query()->create([
             'patient_name' => 'ANA REYES',
             'age' => 35,
+            'birthdate' => '1990-04-12',
             'sex' => 'F',
             'blood_component' => 'Packed RBC',
             'province' => 'Surigao del Norte',
@@ -163,6 +166,8 @@ class BloodConsumptionPageTest extends TestCase
             ->assertSee('Patient Consumption History', false)
             ->assertSee('ANA REYES', false)
             ->assertSee('Packed RBC', false)
+            ->assertSee('Birthdate', false)
+            ->assertSee('April 12, 1990', false)
             ->assertSee('Central (Poblacion), Placer, Surigao del Norte', false)
             ->assertSee('Edit', false)
             ->assertSee('data-delete-url=', false)
@@ -175,6 +180,7 @@ class BloodConsumptionPageTest extends TestCase
         $record = ConsumptionRecord::query()->create([
             'patient_name' => 'ANA REYES',
             'age' => 35,
+            'birthdate' => '1990-04-12',
             'sex' => 'F',
             'blood_component' => 'Packed RBC',
             'province' => 'Surigao del Norte',
@@ -192,12 +198,15 @@ class BloodConsumptionPageTest extends TestCase
             ->assertOk()
             ->assertSee('id="consumption-modal" class="page-panel"', false)
             ->assertSee('Add Consumption Record', false)
+            ->assertSee('name="birthdate"', false)
             ->assertDontSee('id="consumption-modal" class="modal-overlay"', false);
 
         $this->get('/dashboard/blood-consumption?edit='.$record->id)
             ->assertOk()
             ->assertSee('id="consumption-edit-modal" class="page-panel"', false)
+            ->assertSee('name="birthdate"', false)
             ->assertSee('value="ANA REYES"', false)
+            ->assertSee('value="1990-04-12"', false)
             ->assertSee('value="2026-01-31"', false);
     }
 
@@ -307,6 +316,7 @@ class BloodConsumptionPageTest extends TestCase
             'date_submitted' => '2026-01-31',
             'patient_name' => 'Test Patient',
             'age' => 30,
+            'birthdate' => '1996-01-01',
             'sex' => 'M',
             'blood_component' => 'Packed RBC',
             'province' => 'Agusan del Sur',
@@ -321,6 +331,7 @@ class BloodConsumptionPageTest extends TestCase
             'municipality' => 'Bayugan City',
             'location' => 'Barangay 2, Bayugan City, Agusan del Sur',
             'barangay' => 'Barangay 2',
+            'birthdate' => '1996-01-01 00:00:00',
         ]);
 
         $report = app(ReportService::class)->consumption('Agusan del Sur', '', '1', '2026');
@@ -369,12 +380,38 @@ class BloodConsumptionPageTest extends TestCase
         ]);
     }
 
+    public function test_consumption_birthdate_must_not_be_in_the_future(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        $this->from('/dashboard/blood-consumption?add=1')
+            ->post('/dashboard/blood-consumption', [
+                'form' => 'consumption',
+                'date_submitted' => '2026-01-31',
+                'patient_name' => 'Future Birthday',
+                'age' => 30,
+                'birthdate' => now()->addDay()->toDateString(),
+                'sex' => 'M',
+                'blood_component' => 'Packed RBC',
+                'province' => 'Surigao del Norte',
+                'municipality' => 'Placer',
+                'barangay' => 'Central (Poblacion)',
+                'units' => 1,
+            ])
+            ->assertSessionHasErrors('birthdate');
+
+        $this->assertDatabaseMissing('consumption_records', [
+            'patient_name' => 'FUTURE BIRTHDAY',
+        ]);
+    }
+
     public function test_returning_consumption_search_and_store_reuse_the_latest_patient_details(): void
     {
         $this->actingAs(User::factory()->create());
         ConsumptionRecord::query()->create([
             'patient_name' => 'ANA REYES',
             'age' => 31,
+            'birthdate' => '1995-03-10',
             'sex' => 'F',
             'blood_component' => 'Packed RBC',
             'province' => 'Surigao del Norte',
@@ -406,6 +443,7 @@ class BloodConsumptionPageTest extends TestCase
         $record = ConsumptionRecord::query()->whereDate('date_submitted', $today)->orderByDesc('id')->firstOrFail();
         $this->assertSame('ANA REYES', $record->patient_name);
         $this->assertSame(31, $record->age);
+        $this->assertSame('1995-03-10', $record->birthdate->toDateString());
         $this->assertSame('F', $record->sex);
         $this->assertSame('Fresh Frozen Plasma', $record->blood_component);
         $this->assertSame(2, $record->number_of_bags);
@@ -427,6 +465,7 @@ class BloodConsumptionPageTest extends TestCase
         $record = ConsumptionRecord::query()->create([
             'patient_name' => 'OLD NAME',
             'age' => 30,
+            'birthdate' => '1996-01-01',
             'sex' => 'M',
             'blood_component' => 'Packed RBC',
             'blood_type' => 'O+',
@@ -446,6 +485,7 @@ class BloodConsumptionPageTest extends TestCase
             'patient_name' => 'SANTOS, MARIA LOURDES JR.',
             'date_submitted' => '2026-02-15',
             'age' => 31,
+            'birthdate' => '1995-02-15',
             'sex' => 'F',
             'blood_component' => 'Fresh Frozen Plasma',
             'units' => 3,
@@ -458,6 +498,7 @@ class BloodConsumptionPageTest extends TestCase
             'id' => $record->id,
             'patient_name' => 'SANTOS, MARIA LOURDES JR.',
             'age' => 31,
+            'birthdate' => '1995-02-15 00:00:00',
             'sex' => 'F',
             'blood_component' => 'Fresh Frozen Plasma',
             'number_of_bags' => 3,

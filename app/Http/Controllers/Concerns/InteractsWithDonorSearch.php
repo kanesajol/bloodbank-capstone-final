@@ -13,11 +13,7 @@ trait InteractsWithDonorSearch
      */
     protected function searchDonors(string $searchTerm): array
     {
-        $query = Donor::query()->whereHas('donations', function ($donations) {
-            $donations->where(function ($status) {
-                $status->whereNull('status')->orWhere('status', '!=', 'deferred');
-            });
-        });
+        $query = Donor::query()->whereHas('donations');
 
         $words = $this->nameSearchWords($searchTerm);
         if ($words !== []) {
